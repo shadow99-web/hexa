@@ -18,6 +18,7 @@
             --primary-glow: rgba(0, 240, 255, 0.3);
             --danger: #ff003c;
             --warning: #fcee0a;
+            --success: #27c93f;
             
             --card-bg: rgba(10, 15, 25, 0.8);
             --card-border: rgba(0, 240, 255, 0.2);
@@ -34,6 +35,7 @@
             --primary-glow: rgba(0, 119, 255, 0.2);
             --danger: #d90036;
             --warning: #d4a000;
+            --success: #1a8a2a;
             
             --card-bg: rgba(255, 255, 255, 0.9);
             --card-border: rgba(0, 119, 255, 0.2);
@@ -47,7 +49,12 @@
             font-family: 'Space Grotesk', sans-serif;
             scrollbar-width: thin;
             scrollbar-color: var(--primary) var(--bg-color);
+            cursor: crosshair; /* Cyberpunk crosshair cursor */
         }
+
+        /* Re-enable normal cursor for inputs/links */
+        a, button, input, .cmd-item code { cursor: pointer; }
+        .terminal-input { cursor: text; }
 
         body {
             background-color: var(--bg-color);
@@ -57,8 +64,14 @@
             background-image: 
                 linear-gradient(var(--card-border) 1px, transparent 1px),
                 linear-gradient(90deg, var(--card-border) 1px, transparent 1px);
-            background-size: 50px 50px;
+            background-size: 40px 40px;
             background-position: center;
+            animation: bgPan 20s linear infinite;
+        }
+
+        @keyframes bgPan {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
         }
 
         /* Navigation */
@@ -78,28 +91,59 @@
 
         .theme-toggle {
             background: transparent; border: 1px solid var(--card-border);
-            color: var(--primary); padding: 0.5rem; cursor: pointer; transition: 0.3s;
+            color: var(--primary); padding: 0.5rem; transition: 0.3s;
             clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
         }
         .theme-toggle:hover { background: var(--primary-glow); }
 
-        /* FIXED HERO SECTION */
-        .hero {
-            min-height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 8rem 5% 4rem 5%; 
-            position: relative;
-            gap: 4rem;
-            flex-wrap: wrap;
+        /* --- NEW: LIVE THREAT TICKER --- */
+        .ticker-wrap {
+            position: fixed;
+            top: 65px; /* Right below nav */
+            width: 100%;
+            overflow: hidden;
+            background: rgba(255, 0, 60, 0.1);
+            border-bottom: 1px solid rgba(255, 0, 60, 0.3);
+            z-index: 999;
+            padding: 5px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--danger);
         }
 
-        .hero-content { flex: 1 1 500px; z-index: 2; }
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: ticker 25s linear infinite;
+        }
+
+        .ticker-item { padding-right: 50px; }
+        .ticker-item i { margin-right: 5px; }
+
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* Hero Section - Bulletproof Responsive Grid */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            /* Auto-fit handles desktop and mobile perfectly */
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            align-items: center;
+            padding: 8rem 5% 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 3rem;
+        }
+        
+        .hero-content { z-index: 2; }
         
         .hero h1 {
             font-family: 'Syncopate', sans-serif;
-            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
             line-height: 1.1; letter-spacing: -2px;
             margin-bottom: 1rem;
             text-shadow: 4px 4px 0px var(--primary-glow);
@@ -107,18 +151,18 @@
 
         .hero-subtitle {
             font-family: 'Fira Code', monospace; color: var(--primary);
-            font-size: 1.2rem; margin-bottom: 2rem;
+            font-size: 1.1rem; margin-bottom: 2rem;
             display: inline-block; padding: 5px 10px;
             border-left: 3px solid var(--primary); background: rgba(0,240,255,0.05);
         }
 
         .hero p { color: var(--text-muted); max-width: 500px; margin-bottom: 2.5rem; font-size: 1.1rem; }
 
-        .btn-group { display: flex; gap: 1rem; }
+        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
         .btn {
             padding: 1rem 2rem; font-family: 'Fira Code', monospace; font-weight: 600;
             display: flex; align-items: center; gap: 10px; transition: 0.3s;
-            text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+            text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; text-decoration: none;
             clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
         }
         
@@ -128,22 +172,19 @@
         .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
         .btn-outline:hover { background: rgba(0, 240, 255, 0.1); transform: translateY(-3px); }
 
-        /* HERO IMAGE (FIXED FOR DESKTOP) */
+        /* HERO IMAGE */
         .hero-image {
-            flex: 1 1 500px; 
             display: flex; 
             justify-content: center; 
-            position: relative;
+            align-items: center;
         }
         .hero-image img {
             width: 100%; 
-            max-width: 700px; 
+            max-width: 100%; 
             height: auto;
             border-radius: 12px;
-            /* This mask gracefully fades the left side of the image into the background */
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%, black 100%);
-            mask-image: linear-gradient(to right, transparent 0%, black 25%, black 100%);
             box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            border: 1px solid var(--card-border);
         }
 
         /* Interactive Terminal Window */
@@ -220,7 +261,14 @@
         .command-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; background: rgba(0,240,255,0.05); }
         .command-list { padding: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
         .cmd-item { border-left: 2px solid var(--primary); padding-left: 15px; }
-        .cmd-item code { font-family: 'Fira Code', monospace; color: var(--primary); font-size: 1rem; background: rgba(0,240,255,0.1); padding: 2px 6px; border-radius: 4px; }
+        
+        /* Reverted to standard code block */
+        .cmd-item code { 
+            font-family: 'Fira Code', monospace; color: var(--primary); font-size: 1rem; 
+            background: rgba(0,240,255,0.1); padding: 4px 8px; border-radius: 4px; 
+            display: inline-block;
+        }
+        
         .cmd-desc { display: block; color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
         
         .badge { font-family: 'Fira Code', monospace; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; }
@@ -230,19 +278,19 @@
 
         /* Footer */
         footer { border-top: 1px solid var(--card-border); padding: 2rem; text-align: center; font-family: 'Fira Code', monospace; background: var(--nav-bg); }
-        .dev-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text-main); margin-top: 10px; }
+        .dev-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text-main); margin-top: 10px; text-decoration: none;}
         .dev-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); }
 
         /* Responsive */
         @media (max-width: 900px) {
-            .hero { padding-top: 100px; gap: 2rem; flex-direction: column-reverse; text-align: center; }
+            .hero { padding-top: 120px; text-align: center; }
             .hero p { margin: 0 auto 2.5rem auto; }
             .btn-group { justify-content: center; }
-            .hero-image img { -webkit-mask-image: none; mask-image: none; } /* Remove fade on mobile */
             .bento-grid { grid-template-columns: 1fr; }
             .card-large { grid-column: span 1; grid-row: span 1; }
             .terminal-window { margin: 2rem auto; width: 95%; }
             .nav-links { display: none; }
+            .section-title { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -257,6 +305,18 @@
         </div>
         <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
     </nav>
+
+    <!-- NEW: LIVE THREAT TICKER -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="ticker-item"><i class="fa-solid fa-triangle-exclamation"></i> [BLOCKED] Phishing QR detected from IP 192.168.x.x</span>
+            <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> [BLOCKED] Malicious hash #a4f9b... intercepted</span>
+            <span class="ticker-item"><i class="fa-solid fa-link-slash"></i> [BLOCKED] Scam domain (discord-nitro-gift.com) neutralized</span>
+            <span class="ticker-item"><i class="fa-solid fa-user-shield"></i> [SYSTEM] Global blocklist updated across 4,201 servers</span>
+            <span class="ticker-item"><i class="fa-solid fa-triangle-exclamation"></i> [BLOCKED] Phishing QR detected from IP 192.168.x.x</span>
+            <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> [BLOCKED] Malicious hash #a4f9b... intercepted</span>
+        </div>
+    </div>
 
     <header class="hero">
         <div class="hero-content">
@@ -408,7 +468,6 @@
         const terminalBody = document.getElementById('terminal-body');
         const terminalInput = document.getElementById('terminal-input');
         
-        // Removed fake data, replaced with placeholders
         const responses = {
             ';help': 'Available commands:<br>;imgban - Block an image<br>;imgconfig - Configure settings<br>;status - Check system status<br>;clear - Clear terminal',
             ';status': 'System Status: <span style="color:#27c93f">ONLINE</span><br>Uptime: [Fetching...]<br>Global Hashes: [Fetching...]<br>Ping: [Calculating...]',
