@@ -14,13 +14,13 @@
             --bg-color: #03050a;
             --text-main: #e2e8f0;
             --text-muted: #8892b0;
-            --primary: #00f0ff; /* Neon Blue */
+            --primary: #00f0ff; 
             --primary-glow: rgba(0, 240, 255, 0.4);
             --card-bg: rgba(10, 15, 30, 0.6);
             --card-border: rgba(0, 240, 255, 0.15);
             --nav-bg: rgba(3, 5, 10, 0.85);
             --code-bg: #050810;
-            --shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+            --shadow: 0 10px 30px rgba(0, 240, 255, 0.05);
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             
             --discord-yellow: #f0b232;
@@ -45,34 +45,51 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Space Grotesk', sans-serif;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) var(--bg-color);
+            cursor: none; /* Hide default cursor for custom one */
         }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            transition: var(--transition);
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         a { color: var(--primary); text-decoration: none; transition: var(--transition); }
-        a:hover { text-shadow: 0 0 10px var(--primary-glow); }
 
-        /* Scanline Overlay */
-        .scanlines {
+        /* --- CUSTOM CURSOR --- */
+        .cursor-dot, .cursor-outline {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.15));
-            background-size: 100% 4px;
-            z-index: 9999;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 99999;
             pointer-events: none;
-            opacity: 0.4;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 2px solid var(--primary);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .cursor-outline.hovered {
+            width: 60px; height: 60px;
+            background-color: rgba(0, 240, 255, 0.1);
+            border-color: transparent;
+        }
+
+        /* --- CANVAS BACKGROUND --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            opacity: 0.6;
         }
 
         /* Navigation */
@@ -89,327 +106,150 @@
             z-index: 1000;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
         .logo i { color: var(--primary); }
 
         .nav-links { display: flex; gap: 2rem; }
-        .nav-links a {
-            color: var(--text-muted);
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links a { color: var(--text-muted); font-family: 'Fira Code', monospace; font-size: 0.9rem; font-weight: 600; }
+        .nav-links a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
 
         .theme-toggle {
-            background: transparent;
-            border: 1px solid var(--card-border);
-            color: var(--primary);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: var(--transition);
+            background: transparent; border: 1px solid var(--card-border);
+            color: var(--primary); padding: 0.5rem; border-radius: 4px; transition: var(--transition);
         }
         .theme-toggle:hover { box-shadow: 0 0 10px var(--primary-glow); border-color: var(--primary); }
 
-        /* Hero Section - Right Aligned for the Banner */
+        /* Hero Section */
         .hero {
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end; /* Push content to the right */
-            padding: 0 10%;
-            position: relative;
-            text-align: right;
-            /* Dark gradient fading from right to left to show the character on the left */
-            background: linear-gradient(-90deg, var(--bg-color) 20%, rgba(3,5,10,0.8) 50%, rgba(3,5,10,0.2) 100%), 
+            display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
+            padding: 0 10%; position: relative; text-align: right;
+            background: linear-gradient(-90deg, var(--bg-color) 20%, rgba(3,5,10,0.7) 60%, transparent), 
                         url('hexa-banner.jpg') center left / cover no-repeat;
         }
-
         [data-theme="light"] .hero {
-             background: linear-gradient(-90deg, var(--bg-color) 20%, rgba(230,240,250,0.8) 50%, rgba(230,240,250,0.2) 100%), 
+             background: linear-gradient(-90deg, var(--bg-color) 20%, rgba(230,240,250,0.7) 60%, transparent), 
                         url('hexa-banner.jpg') center left / cover no-repeat;
-        }
-
-        .hero h1 {
-            font-size: clamp(4rem, 10vw, 8rem);
-            font-weight: 700;
-            letter-spacing: -4px;
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
         }
 
         /* Glitch Effect */
+        .hero h1 {
+            font-size: clamp(4rem, 10vw, 8rem); font-weight: 700; letter-spacing: -4px; margin-bottom: 1rem; position: relative;
+        }
         .glitch { color: var(--text-main); position: relative; }
         .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent;
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent;
         }
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 var(--danger);
-            clip: rect(24px, 550px, 90px, 0);
-            animation: glitch-anim 3s infinite linear alternate-reverse;
-        }
-        .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 var(--primary);
-            clip: rect(85px, 550px, 140px, 0);
-            animation: glitch-anim2 2.5s infinite linear alternate-reverse;
-        }
+        .glitch::before { left: 2px; text-shadow: -2px 0 var(--danger); clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 3s infinite linear alternate-reverse; }
+        .glitch::after { left: -2px; text-shadow: 2px 0 var(--primary); clip: rect(85px, 550px, 140px, 0); animation: glitch-anim2 2.5s infinite linear alternate-reverse; }
 
         @keyframes glitch-anim {
-            0% { clip: rect(10px, 9999px, 83px, 0); }
-            20% { clip: rect(62px, 9999px, 14px, 0); }
-            40% { clip: rect(33px, 9999px, 91px, 0); }
-            60% { clip: rect(78px, 9999px, 50px, 0); }
-            80% { clip: rect(5px, 9999px, 100px, 0); }
-            100% { clip: rect(40px, 9999px, 60px, 0); }
+            0% { clip: rect(10px, 9999px, 83px, 0); } 20% { clip: rect(62px, 9999px, 14px, 0); }
+            40% { clip: rect(33px, 9999px, 91px, 0); } 60% { clip: rect(78px, 9999px, 50px, 0); }
+            80% { clip: rect(5px, 9999px, 100px, 0); } 100% { clip: rect(40px, 9999px, 60px, 0); }
         }
         @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 100px, 0); }
-            20% { clip: rect(12px, 9999px, 50px, 0); }
-            40% { clip: rect(88px, 9999px, 20px, 0); }
-            60% { clip: rect(30px, 9999px, 70px, 0); }
-            80% { clip: rect(95px, 9999px, 10px, 0); }
-            100% { clip: rect(25px, 9999px, 80px, 0); }
+            0% { clip: rect(65px, 9999px, 100px, 0); } 20% { clip: rect(12px, 9999px, 50px, 0); }
+            40% { clip: rect(88px, 9999px, 20px, 0); } 60% { clip: rect(30px, 9999px, 70px, 0); }
+            80% { clip: rect(95px, 9999px, 10px, 0); } 100% { clip: rect(25px, 9999px, 80px, 0); }
         }
 
         .hero p {
-            font-size: 1.1rem;
-            font-family: 'Fira Code', monospace;
-            color: var(--text-main);
-            max-width: 550px;
-            margin-bottom: 2.5rem;
-            border-right: 3px solid var(--primary); /* Right border instead of left */
-            padding-right: 15px;
-            background: rgba(0,0,0,0.6);
-            padding: 10px 15px;
-            border-radius: 4px 0 0 4px;
-            text-align: right;
+            font-size: 1.1rem; font-family: 'Fira Code', monospace; max-width: 550px; margin-bottom: 2.5rem;
+            border-right: 3px solid var(--primary); padding: 15px; background: rgba(0,0,0,0.6); border-radius: 4px 0 0 4px;
         }
-
-        .hero p .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1.1rem;
-            background-color: var(--primary);
-            animation: blink 1s step-end infinite;
-            vertical-align: bottom;
-            margin-left: 5px;
-        }
+        .cursor-blink { display: inline-block; width: 10px; height: 1.1rem; background-color: var(--primary); animation: blink 1s step-end infinite; vertical-align: bottom; margin-left: 5px; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
-
+        .btn-group { display: flex; gap: 1rem; justify-content: flex-end; }
         .btn {
-            padding: 0.8rem 1.8rem;
-            font-family: 'Fira Code', monospace;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
+            padding: 0.8rem 1.8rem; font-family: 'Fira Code', monospace; font-weight: 600; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 10px; border-radius: 4px; transition: var(--transition);
         }
-
-        .btn-primary {
-            background: var(--primary);
-            color: #000;
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
+        .btn-primary { background: var(--primary); color: #000; border: 1px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 25px var(--primary-glow); }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
+        .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
         .btn-outline:hover { background: rgba(0, 240, 255, 0.1); transform: translateY(-3px); }
 
-        /* Sections */
-        .container { max-width: 1200px; margin: 0 auto; padding: 6rem 5%; }
-        
-        .section-title {
-            font-family: 'Fira Code', monospace;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        /* Sections & Bento Grid */
+        .container { max-width: 1200px; margin: 0 auto; padding: 6rem 5%; position: relative; z-index: 2; }
+        .section-title { font-family: 'Fira Code', monospace; font-size: 2rem; margin-bottom: 3rem; display: flex; align-items: center; gap: 15px; }
         .section-title::before { content: '//'; color: var(--primary); opacity: 0.5; }
-        .section-title i { color: var(--primary); font-size: 1.5rem; }
 
-        /* Feature Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
 
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-top: 3px solid var(--primary);
-            border-radius: 4px;
+            border-radius: 12px;
             padding: 2rem;
-            transition: var(--transition);
-            position: relative;
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            backdrop-filter: blur(5px);
         }
 
-        .card:hover {
-            box-shadow: var(--shadow);
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
+        .card:hover { box-shadow: var(--shadow); border-color: var(--primary); }
+        
+        .card-large { grid-column: span 2; grid-row: span 2; }
+        .card-tall { grid-row: span 2; }
 
-        .card h3 {
-            font-size: 1.2rem;
-            font-family: 'Fira Code', monospace;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .card h3 i { color: var(--primary); }
-
-        .card ul { list-style: none; }
-        .card ul li {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
+        .card h3 { font-size: 1.2rem; font-family: 'Fira Code', monospace; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; color: var(--primary); }
+        .card ul { list-style: none; margin-top: 1rem; }
+        .card ul li { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
         .card ul li i { color: var(--primary); margin-top: 5px; font-size: 0.8rem; }
 
         /* Carousel */
-        .carousel-track {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 20px;
-            scrollbar-width: none;
-        }
+        .carousel-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; scrollbar-width: none; }
         .carousel-track::-webkit-scrollbar { display: none; }
-        
-        .carousel-item {
-            flex: 0 0 auto;
-            width: 85%; max-width: 600px;
-            scroll-snap-align: start;
-            border-radius: 8px;
-            border: 1px solid var(--card-border);
-            box-shadow: var(--shadow);
-        }
+        .carousel-item { flex: 0 0 auto; width: 85%; max-width: 600px; scroll-snap-align: start; border-radius: 8px; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
         .carousel-item img { width: 100%; height: auto; display: block; border-radius: 8px; }
 
-        /* Commands Code Block */
-        .command-container {
-            background: var(--code-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .command-header {
-            background: rgba(0, 240, 255, 0.05);
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--card-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'Fira Code', monospace;
-            font-weight: 600;
-        }
-
+        /* Commands */
+        .command-container { background: var(--code-bg); border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 2rem; overflow: hidden; box-shadow: var(--shadow); }
+        .command-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; font-weight: 600; background: rgba(0, 240, 255, 0.05); }
         .command-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
-
         .cmd-item { display: flex; flex-direction: column; gap: 4px; }
-
-        .cmd-item code {
-            font-family: 'Fira Code', monospace;
-            color: var(--primary);
-            background: rgba(0, 240, 255, 0.1);
-            padding: 0.2rem 0.5rem;
-            border-radius: 3px;
-            width: fit-content;
-            font-size: 0.9rem;
-            border-left: 2px solid var(--primary);
-        }
-
+        .cmd-item code { font-family: 'Fira Code', monospace; color: var(--primary); background: rgba(0, 240, 255, 0.1); padding: 0.2rem 0.5rem; border-radius: 3px; width: fit-content; font-size: 0.9rem; border-left: 2px solid var(--primary); }
         .cmd-desc { color: var(--text-muted); font-size: 0.9rem; margin-left: 5px; }
-
-        .badge { font-family: 'Fira Code', monospace; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase;}
+        .badge { font-family: 'Fira Code', monospace; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; }
         .badge.free { background: var(--primary); color: #000; }
         .badge.premium { background: var(--discord-yellow); color: #000; }
         .badge.dev { background: var(--danger); color: #fff; }
 
         /* Footer */
-        footer {
-            border-top: 1px solid var(--card-border);
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            background: var(--nav-bg);
-        }
-
-        .dev-avatar {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-            transition: var(--transition);
-        }
+        footer { border-top: 1px solid var(--card-border); padding: 2rem; display: flex; justify-content: center; align-items: center; gap: 15px; font-family: 'Fira Code', monospace; font-size: 0.9rem; background: var(--nav-bg); position: relative; z-index: 2; }
+        .dev-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary); transition: var(--transition); }
         .dev-avatar:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 0 15px var(--primary-glow); }
 
-        /* Responsive Fixes for Mobile */
-        @media (max-width: 900px) {
-            .hero {
-                align-items: center;
-                text-align: center;
-                /* On mobile, just fade from bottom to top */
-                background: linear-gradient(0deg, var(--bg-color) 30%, rgba(3,5,10,0.8) 100%), 
-                            url('hexa-banner.jpg') center / cover no-repeat;
-            }
-            .hero p {
-                border-right: none;
-                border-bottom: 3px solid var(--primary);
-                border-radius: 4px 4px 0 0;
-                text-align: center;
-            }
-            .btn-group { justify-content: center; }
-        }
+        /* Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        @media (max-width: 768px) {
+        /* Mobile */
+        @media (max-width: 900px) {
+            .hero { align-items: center; text-align: center; background: linear-gradient(0deg, var(--bg-color) 30%, rgba(3,5,10,0.8) 100%), url('hexa-banner.jpg') center / cover no-repeat; }
+            .hero p { border-right: none; border-bottom: 3px solid var(--primary); border-radius: 4px 4px 0 0; text-align: center; }
+            .btn-group { justify-content: center; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .card-large, .card-tall { grid-column: span 1; grid-row: span 1; }
             .nav-links { display: none; }
             .glitch::before, .glitch::after { display: none; }
-            .section-title { font-size: 1.5rem; }
+            .cursor-dot, .cursor-outline { display: none; } /* Hide custom cursor on mobile */
+            * { cursor: auto; }
         }
     </style>
 </head>
 <body>
-    <div class="scanlines"></div>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Interactive Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
 
     <nav>
         <div class="logo"><i class="fa-solid fa-hexagon-nodes"></i> HEXA</div>
@@ -423,7 +263,7 @@
 
     <header class="hero">
         <h1 class="glitch" data-text="HEXA ⬡">HEXA ⬡</h1>
-        <p><span id="typing-text"></span><span class="cursor"></span></p>
+        <p><span id="typing-text"></span><span class="cursor-blink"></span></p>
         <div class="btn-group">
             <a href="https://discord.com/oauth2/authorize?client_id=1562186060824576070&permissions=8&integration_type=0&scope=bot+applications.commands" target="_blank" class="btn btn-primary">
                 <i class="fa-brands fa-discord"></i> Initialize Bot
@@ -435,28 +275,29 @@
     </header>
 
     <main class="container">
-        <!-- Features -->
-        <section id="features">
+        <!-- Features (Bento Layout) -->
+        <section id="features" class="reveal">
             <h2 class="section-title">System_Capabilities</h2>
-            <div class="grid">
-                <div class="card">
+            <div class="bento-grid">
+                <div class="card card-large tilt">
                     <h3><i class="fa-solid fa-shield-halved"></i> Core_Protocol</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">The fundamental defense layer deployed on every server.</p>
                     <ul>
-                        <li><i class="fa-solid fa-angle-right"></i> Perceptual Hashing (pHash/dHash)</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Perceptual Hashing (pHash/dHash) fingerprinting</li>
                         <li><i class="fa-solid fa-angle-right"></i> Automated Image Deletion</li>
-                        <li><i class="fa-solid fa-angle-right"></i> DM Notifications</li>
+                        <li><i class="fa-solid fa-angle-right"></i> DM Notifications to compromised accounts</li>
                         <li><i class="fa-solid fa-angle-right"></i> Admin Security Logging</li>
                     </ul>
                 </div>
-                <div class="card" style="border-top-color: var(--discord-yellow);">
+                <div class="card tilt" style="border-top: 3px solid var(--discord-yellow);">
                     <h3 style="color: var(--discord-yellow);"><i class="fa-solid fa-crown"></i> Premium_Modules</h3>
                     <ul>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> Advanced Punishments</li>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> Malicious Link Scanning</li>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> Phishing QR Detection</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> Link/URL Scanning</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> QR Phishing Detection</li>
                     </ul>
                 </div>
-                <div class="card" style="border-top-color: var(--danger);">
+                <div class="card tilt" style="border-top: 3px solid var(--danger);">
                     <h3 style="color: var(--danger);"><i class="fa-solid fa-code"></i> Root_Access</h3>
                     <ul>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Global Blocklist Push</li>
@@ -468,7 +309,7 @@
         </section>
 
         <!-- Carousel -->
-        <section id="interface" style="margin-top: 6rem;">
+        <section id="interface" class="reveal" style="margin-top: 6rem;">
             <h2 class="section-title">UI_Terminal</h2>
             <p style="margin-bottom: 2rem; color: var(--text-muted);">Scroll horizontally to view bot responses.</p>
             <div class="carousel-track">
@@ -478,11 +319,11 @@
         </section>
 
         <!-- Commands -->
-        <section id="commands" style="margin-top: 6rem;">
+        <section id="commands" class="reveal" style="margin-top: 6rem;">
             <h2 class="section-title">Command_Registry</h2>
             
             <!-- Free -->
-            <div class="command-container">
+            <div class="command-container tilt">
                 <div class="command-header">
                     <span><i class="fa-solid fa-user"></i> Public_Functions</span>
                     <span class="badge free">Free</span>
@@ -500,8 +341,7 @@
             </div>
 
             <!-- Premium -->
-            <!-- Premium -->
-            <div class="command-container" style="border-color: rgba(240, 178, 50, 0.3);">
+            <div class="command-container tilt" style="border-color: rgba(240, 178, 50, 0.3);">
                 <div class="command-header" style="background: rgba(240, 178, 50, 0.05); border-bottom-color: rgba(240, 178, 50, 0.3);">
                     <span><i class="fa-solid fa-crown"></i> Premium_Functions</span>
                     <span class="badge premium">Premium</span>
@@ -520,7 +360,7 @@
             </div>
 
             <!-- Dev -->
-            <div class="command-container" style="border-color: rgba(255, 0, 85, 0.3);">
+            <div class="command-container tilt" style="border-color: rgba(255, 0, 85, 0.3);">
                 <div class="command-header" style="background: rgba(255, 0, 85, 0.05); border-bottom-color: rgba(255, 0, 85, 0.3);">
                     <span><i class="fa-solid fa-terminal"></i> Root_Functions</span>
                     <span class="badge dev">Dev</span>
@@ -543,7 +383,145 @@
     </footer>
 
     <script>
-        // Typewriter Effect
+        // --- 1. CUSTOM CURSOR LOGIC ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            // Smooth trailing for outline
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Hover effect on links/buttons
+        document.querySelectorAll('a, button, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
+        });
+
+        // --- 2. INTERACTIVE PARTICLE CANVAS ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x; mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#00f0ff'; // Primary color
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+
+                // Collision with mouse
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius + this.size) {
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 10;
+                    if (mouse.x > this.x && this.x > this.size * 10) this.x -= 10;
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 10;
+                    if (mouse.y > this.y && this.y > this.size * 10) this.y -= 10;
+                }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 15000; // Adjust density here
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 1) - 0.5;
+                let directionY = (Math.random() * 1) - 0.5;
+                particlesArray.push(new Particle(x, y, directionX, directionY, size));
+            }
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width / 10) * (canvas.height / 10)) {
+                        opacityValue = 1 - (distance / 20000);
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${opacityValue * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth; canvas.height = innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+
+        // --- 3. 3D TILT EFFECT ON CARDS ---
+        const tiltCards = document.querySelectorAll('.tilt');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+            });
+        });
+
+        // --- 4. TYPEWRITER EFFECT ---
         const text = "A highly secure, perceptual-hash image blocklist. Stop scam images, phishing QR codes, and malicious links in their tracks—even if attackers re-compress them.";
         const typingElement = document.getElementById('typing-text');
         let i = 0;
@@ -555,9 +533,20 @@
                 setTimeout(typeWriter, 30);
             }
         }
-        setTimeout(typeWriter, 500); // Start typing after 0.5s
+        setTimeout(typeWriter, 500);
 
-        // Theme Toggle Logic
+        // --- 5. SCROLL REVEAL ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => observer.observe(el));
+                // --- 6. THEME TOGGLE ---
         const themeToggleBtn = document.getElementById('themeToggle');
         const themeIcon = themeToggleBtn.querySelector('i');
         const htmlElement = document.documentElement;
@@ -579,14 +568,6 @@
                 themeIcon.classList.replace('fa-sun', 'fa-moon');
                 localStorage.setItem('theme', 'dark');
             }
-        });
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-            });
         });
     </script>
 </body>
