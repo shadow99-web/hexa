@@ -6,46 +6,47 @@
     <title>HEXA ⬡ | Discord Security</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Syncopate:wght@700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #03050a;
-            --text-main: #e2e8f0;
-            --text-muted: #8892b0;
+            --bg-color: #05070a;
+            --text-main: #ffffff;
+            --text-muted: #7a8b9e;
             --primary: #00f0ff; 
-            --primary-glow: rgba(0, 240, 255, 0.4);
-            --card-bg: rgba(10, 15, 30, 0.6);
-            --card-border: rgba(0, 240, 255, 0.15);
-            --nav-bg: rgba(3, 5, 10, 0.85);
-            --code-bg: #050810;
-            --shadow: 0 10px 30px rgba(0, 240, 255, 0.05);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --primary-glow: rgba(0, 240, 255, 0.3);
+            --danger: #ff003c;
+            --warning: #fcee0a;
             
-            --discord-yellow: #f0b232;
-            --danger: #ff0055;
+            --card-bg: rgba(10, 15, 25, 0.8);
+            --card-border: rgba(0, 240, 255, 0.2);
+            --nav-bg: rgba(5, 7, 10, 0.9);
+            --terminal-bg: #000000;
+            --terminal-text: #00f0ff;
         }
 
         [data-theme="light"] {
-            --bg-color: #e6f0fa;
-            --text-main: #0a192f;
+            --bg-color: #f4f6f9;
+            --text-main: #0a101d;
             --text-muted: #4a5568;
-            --primary: #0088cc;
-            --primary-glow: rgba(0, 136, 204, 0.3);
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --card-border: rgba(0, 136, 204, 0.2);
-            --nav-bg: rgba(230, 240, 250, 0.85);
-            --code-bg: #f0f4f8;
-            --shadow: 0 10px 30px rgba(0, 136, 204, 0.1);
+            --primary: #0077ff;
+            --primary-glow: rgba(0, 119, 255, 0.2);
+            --danger: #d90036;
+            --warning: #d4a000;
+            
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 119, 255, 0.2);
+            --nav-bg: rgba(244, 246, 249, 0.9);
+            --terminal-bg: #1e1e1e;
+            --terminal-text: #00ff00;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Space Grotesk', sans-serif;
-            cursor: none; /* Hide default cursor for custom one */
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-color);
         }
 
         body {
@@ -53,254 +54,264 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            transition: background-color 0.5s ease, color 0.5s ease;
-        }
-
-        a { color: var(--primary); text-decoration: none; transition: var(--transition); }
-
-        /* --- CUSTOM CURSOR --- */
-        .cursor-dot, .cursor-outline {
-            position: fixed;
-            top: 0; left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 99999;
-            pointer-events: none;
-        }
-        .cursor-dot {
-            width: 8px; height: 8px;
-            background-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
-        }
-        .cursor-outline {
-            width: 40px; height: 40px;
-            border: 2px solid var(--primary);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
-        }
-        .cursor-outline.hovered {
-            width: 60px; height: 60px;
-            background-color: rgba(0, 240, 255, 0.1);
-            border-color: transparent;
-        }
-
-        /* --- CANVAS BACKGROUND --- */
-        #particle-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            opacity: 0.6;
+            background-image: 
+                linear-gradient(var(--card-border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--card-border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center;
         }
 
         /* Navigation */
         nav {
-            position: fixed;
-            top: 0; width: 100%;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--nav-bg);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--card-border);
-            z-index: 1000;
+            position: fixed; top: 0; width: 100%; padding: 1rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--nav-bg); backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--card-border); z-index: 1000;
         }
 
-        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+        .logo { font-family: 'Syncopate', sans-serif; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .logo i { color: var(--primary); }
 
         .nav-links { display: flex; gap: 2rem; }
-        .nav-links a { color: var(--text-muted); font-family: 'Fira Code', monospace; font-size: 0.9rem; font-weight: 600; }
+        .nav-links a { color: var(--text-muted); font-family: 'Fira Code', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;}
         .nav-links a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
 
         .theme-toggle {
             background: transparent; border: 1px solid var(--card-border);
-            color: var(--primary); padding: 0.5rem; border-radius: 4px; transition: var(--transition);
+            color: var(--primary); padding: 0.5rem; cursor: pointer; transition: 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); /* Angled button */
         }
-        .theme-toggle:hover { box-shadow: 0 0 10px var(--primary-glow); border-color: var(--primary); }
+        .theme-toggle:hover { background: var(--primary-glow); }
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
-            padding: 0 10%; position: relative; text-align: right;
-            background: linear-gradient(-90deg, var(--bg-color) 20%, rgba(3,5,10,0.7) 60%, transparent), 
-                        url('hexa-banner.jpg') center left / cover no-repeat;
-        }
-        [data-theme="light"] .hero {
-             background: linear-gradient(-90deg, var(--bg-color) 20%, rgba(230,240,250,0.7) 60%, transparent), 
-                        url('hexa-banner.jpg') center left / cover no-repeat;
+            min-height: 100vh; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 10%; padding-top: 80px; position: relative;
         }
 
-        /* Glitch Effect */
+        .hero-content { flex: 1; z-index: 2; }
+        
         .hero h1 {
-            font-size: clamp(4rem, 10vw, 8rem); font-weight: 700; letter-spacing: -4px; margin-bottom: 1rem; position: relative;
-        }
-        .glitch { color: var(--text-main); position: relative; }
-        .glitch::before, .glitch::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent;
-        }
-        .glitch::before { left: 2px; text-shadow: -2px 0 var(--danger); clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 3s infinite linear alternate-reverse; }
-        .glitch::after { left: -2px; text-shadow: 2px 0 var(--primary); clip: rect(85px, 550px, 140px, 0); animation: glitch-anim2 2.5s infinite linear alternate-reverse; }
-
-        @keyframes glitch-anim {
-            0% { clip: rect(10px, 9999px, 83px, 0); } 20% { clip: rect(62px, 9999px, 14px, 0); }
-            40% { clip: rect(33px, 9999px, 91px, 0); } 60% { clip: rect(78px, 9999px, 50px, 0); }
-            80% { clip: rect(5px, 9999px, 100px, 0); } 100% { clip: rect(40px, 9999px, 60px, 0); }
-        }
-        @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 100px, 0); } 20% { clip: rect(12px, 9999px, 50px, 0); }
-            40% { clip: rect(88px, 9999px, 20px, 0); } 60% { clip: rect(30px, 9999px, 70px, 0); }
-            80% { clip: rect(95px, 9999px, 10px, 0); } 100% { clip: rect(25px, 9999px, 80px, 0); }
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(3rem, 6vw, 6rem);
+            line-height: 1.1; letter-spacing: -2px;
+            margin-bottom: 1rem;
+            text-shadow: 4px 4px 0px var(--primary-glow);
         }
 
-        .hero p {
-            font-size: 1.1rem; font-family: 'Fira Code', monospace; max-width: 550px; margin-bottom: 2.5rem;
-            border-right: 3px solid var(--primary); padding: 15px; background: rgba(0,0,0,0.6); border-radius: 4px 0 0 4px;
+        .hero-subtitle {
+            font-family: 'Fira Code', monospace; color: var(--primary);
+            font-size: 1.2rem; margin-bottom: 2rem;
+            display: inline-block; padding: 5px 10px;
+            border-left: 3px solid var(--primary); background: rgba(0,240,255,0.05);
         }
-        .cursor-blink { display: inline-block; width: 10px; height: 1.1rem; background-color: var(--primary); animation: blink 1s step-end infinite; vertical-align: bottom; margin-left: 5px; }
-        @keyframes blink { 50% { opacity: 0; } }
 
-        .btn-group { display: flex; gap: 1rem; justify-content: flex-end; }
+        .hero p { color: var(--text-muted); max-width: 500px; margin-bottom: 2.5rem; font-size: 1.1rem; }
+
+        .btn-group { display: flex; gap: 1rem; }
         .btn {
-            padding: 0.8rem 1.8rem; font-family: 'Fira Code', monospace; font-weight: 600; font-size: 0.9rem;
-            display: flex; align-items: center; gap: 10px; border-radius: 4px; transition: var(--transition);
+            padding: 1rem 2rem; font-family: 'Fira Code', monospace; font-weight: 600;
+            display: flex; align-items: center; gap: 10px; transition: 0.3s;
+            text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); /* HUD Corners */
         }
-        .btn-primary { background: var(--primary); color: #000; border: 1px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 25px var(--primary-glow); }
+        
+        .btn-primary { background: var(--primary); color: #000; border: none; box-shadow: 0 0 20px var(--primary-glow); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 30px var(--primary-glow); }
+        
         .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
         .btn-outline:hover { background: rgba(0, 240, 255, 0.1); transform: translateY(-3px); }
 
-        /* Sections & Bento Grid */
-        .container { max-width: 1200px; margin: 0 auto; padding: 6rem 5%; position: relative; z-index: 2; }
-        .section-title { font-family: 'Fira Code', monospace; font-size: 2rem; margin-bottom: 3rem; display: flex; align-items: center; gap: 15px; }
-        .section-title::before { content: '//'; color: var(--primary); opacity: 0.5; }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+        /* Hero Image */
+        .hero-image {
+            flex: 1; display: flex; justify-content: flex-end; position: relative;
         }
+        .hero-image img {
+            width: 120%; max-width: 800px; 
+            mask-image: linear-gradient(to left, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%);
+            transform: translateX(10%);
+        }
+
+        /* Interactive Terminal Window */
+        .terminal-window {
+            background: var(--terminal-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            max-width: 800px;
+            margin: -50px auto 4rem auto;
+            position: relative; z-index: 10;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px var(--primary-glow);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #1a1b1e; padding: 10px 15px; display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid #333;
+        }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; } .dot-yellow { background: #ffbd2e; } .dot-green { background: #27c93f; }
+        .terminal-title { color: #888; font-family: 'Fira Code', monospace; font-size: 0.8rem; margin-left: 10px; }
+
+        .terminal-body {
+            padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.95rem;
+            color: var(--terminal-text); height: 250px; overflow-y: auto;
+        }
+
+        .terminal-line { margin-bottom: 8px; }
+        .terminal-prompt { color: #27c93f; margin-right: 10px; }
+        
+        .terminal-input-line { display: flex; align-items: center; }
+        .terminal-input {
+            background: transparent; border: none; color: var(--text-main);
+            font-family: 'Fira Code', monospace; font-size: 0.95rem;
+            outline: none; width: 100%; margin-left: 10px;
+        }
+
+        /* Features / Bento Grid */
+        .container { max-width: 1200px; margin: 0 auto; padding: 4rem 5%; position: relative; z-index: 2; }
+        .section-title {
+            font-family: 'Syncopate', sans-serif; font-size: 2.5rem; margin-bottom: 3rem;
+            text-align: center; text-transform: uppercase;
+        }
+
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 12px;
             padding: 2rem;
-            transition: transform 0.1s ease, box-shadow 0.3s ease;
-            transform-style: preserve-3d;
-            backdrop-filter: blur(5px);
+            transition: 0.3s;
+            /* Sci-fi Angled Corners */
+            clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px));
+            backdrop-filter: blur(10px);
         }
 
-        .card:hover { box-shadow: var(--shadow); border-color: var(--primary); }
-        
-        .card-large { grid-column: span 2; grid-row: span 2; }
-        .card-tall { grid-row: span 2; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
 
-        .card h3 { font-size: 1.2rem; font-family: 'Fira Code', monospace; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; color: var(--primary); }
-        .card ul { list-style: none; margin-top: 1rem; }
-        .card ul li { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
-        .card ul li i { color: var(--primary); margin-top: 5px; font-size: 0.8rem; }
+        .card-large { grid-column: span 2; grid-row: span 2; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, rgba(0,240,255,0.05) 0%, transparent 100%); }
+        
+        .card h3 { font-family: 'Syncopate', sans-serif; font-size: 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary); text-transform: uppercase; }
+        .card h3 i { font-size: 1.5rem; }
+        .card ul { list-style: none; }
+        .card ul li { color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; font-size: 1rem; }
+        .card ul li i { color: var(--primary); margin-top: 5px; }
 
         /* Carousel */
-        .carousel-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; scrollbar-width: none; }
+        .carousel-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; }
         .carousel-track::-webkit-scrollbar { display: none; }
-        .carousel-item { flex: 0 0 auto; width: 85%; max-width: 600px; scroll-snap-align: start; border-radius: 8px; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
-        .carousel-item img { width: 100%; height: auto; display: block; border-radius: 8px; }
+        .carousel-item { flex: 0 0 auto; width: 85%; max-width: 600px; scroll-snap-align: center; border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .carousel-item img { width: 100%; display: block; }
 
-        /* Commands */
-        .command-container { background: var(--code-bg); border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 2rem; overflow: hidden; box-shadow: var(--shadow); }
-        .command-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; font-weight: 600; background: rgba(0, 240, 255, 0.05); }
-        .command-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
-        .cmd-item { display: flex; flex-direction: column; gap: 4px; }
-        .cmd-item code { font-family: 'Fira Code', monospace; color: var(--primary); background: rgba(0, 240, 255, 0.1); padding: 0.2rem 0.5rem; border-radius: 3px; width: fit-content; font-size: 0.9rem; border-left: 2px solid var(--primary); }
-        .cmd-desc { color: var(--text-muted); font-size: 0.9rem; margin-left: 5px; }
+        /* Command Registry */
+        .command-category { margin-bottom: 2rem; background: var(--card-bg); border: 1px solid var(--card-border); }
+        .command-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; background: rgba(0,240,255,0.05); }
+        .command-list { padding: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+        .cmd-item { border-left: 2px solid var(--primary); padding-left: 15px; }
+        .cmd-item code { font-family: 'Fira Code', monospace; color: var(--primary); font-size: 1rem; background: rgba(0,240,255,0.1); padding: 2px 6px; border-radius: 4px; }
+        .cmd-desc { display: block; color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
+        
         .badge { font-family: 'Fira Code', monospace; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; }
         .badge.free { background: var(--primary); color: #000; }
-        .badge.premium { background: var(--discord-yellow); color: #000; }
+        .badge.premium { background: var(--warning); color: #000; }
         .badge.dev { background: var(--danger); color: #fff; }
 
         /* Footer */
-        footer { border-top: 1px solid var(--card-border); padding: 2rem; display: flex; justify-content: center; align-items: center; gap: 15px; font-family: 'Fira Code', monospace; font-size: 0.9rem; background: var(--nav-bg); position: relative; z-index: 2; }
-        .dev-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary); transition: var(--transition); }
-        .dev-avatar:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 0 15px var(--primary-glow); }
+        footer { border-top: 1px solid var(--card-border); padding: 2rem; text-align: center; font-family: 'Fira Code', monospace; background: var(--nav-bg); }
+        .dev-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text-main); margin-top: 10px; }
+        .dev-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); }
 
-        /* Scroll Reveal */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* Mobile */
+        /* Responsive */
         @media (max-width: 900px) {
-            .hero { align-items: center; text-align: center; background: linear-gradient(0deg, var(--bg-color) 30%, rgba(3,5,10,0.8) 100%), url('hexa-banner.jpg') center / cover no-repeat; }
-            .hero p { border-right: none; border-bottom: 3px solid var(--primary); border-radius: 4px 4px 0 0; text-align: center; }
+            .hero { flex-direction: column; text-align: center; padding-top: 100px; }
+            .hero-image { display: none; }
+            .hero p { margin: 0 auto 2.5rem auto; }
             .btn-group { justify-content: center; }
             .bento-grid { grid-template-columns: 1fr; }
-            .card-large, .card-tall { grid-column: span 1; grid-row: span 1; }
-            .nav-links { display: none; }
-            .glitch::before, .glitch::after { display: none; }
-            .cursor-dot, .cursor-outline { display: none; } /* Hide custom cursor on mobile */
-            * { cursor: auto; }
+            .card-large { grid-column: span 1; grid-row: span 1; }
+            .terminal-window { margin: 2rem auto; width: 95%; }
         }
     </style>
 </head>
 <body>
-    <!-- Custom Cursor -->
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
-    <!-- Interactive Particle Canvas -->
-    <canvas id="particle-canvas"></canvas>
 
     <nav>
         <div class="logo"><i class="fa-solid fa-hexagon-nodes"></i> HEXA</div>
         <div class="nav-links">
-            <a href="#features">./features</a>
-            <a href="#interface">./interface</a>
-            <a href="#commands">./commands</a>
+            <a href="#features">[ Features ]</a>
+            <a href="#interface">[ Interface ]</a>
+            <a href="#commands">[ Commands ]</a>
         </div>
         <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
     </nav>
 
     <header class="hero">
-        <h1 class="glitch" data-text="HEXA ⬡">HEXA ⬡</h1>
-        <p><span id="typing-text"></span><span class="cursor-blink"></span></p>
-        <div class="btn-group">
-            <a href="https://discord.com/oauth2/authorize?client_id=1562186060824576070&permissions=8&integration_type=0&scope=bot+applications.commands" target="_blank" class="btn btn-primary">
-                <i class="fa-brands fa-discord"></i> Initialize Bot
-            </a>
-            <a href="#commands" class="btn btn-outline">
-                <i class="fa-solid fa-terminal"></i> View Source
-            </a>
+        <div class="hero-content">
+            <h1>SYSTEM<br>SECURED.</h1>
+            <div class="hero-subtitle">> Aegis Protocol Activated</div>
+            <p>A highly secure, perceptual-hash image blocklist for Discord. Stop scam images, phishing QR codes, and malicious links in their tracks—even if attackers try to resize or re-compress them.</p>
+            <div class="btn-group">
+                <a href="https://discord.com/oauth2/authorize?client_id=1562186060824576070&permissions=8&integration_type=0&scope=bot+applications.commands" target="_blank" class="btn btn-primary">
+                    <i class="fa-brands fa-discord"></i> Initialize
+                </a>
+                <a href="#features" class="btn btn-outline">
+                    <i class="fa-solid fa-terminal"></i> Explore
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="hexa-banner.jpg" alt="HEXA">
         </div>
     </header>
 
     <main class="container">
-        <!-- Features (Bento Layout) -->
-        <section id="features" class="reveal">
+        
+        <!-- INTERACTIVE TERMINAL -->
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+                <div class="terminal-title">hexa@root: ~/discord</div>
+            </div>
+            <div class="terminal-body" id="terminal-body" onclick="document.getElementById('terminal-input').focus()">
+                <div class="terminal-line">HEXA Core v2.4.0 initialized.</div>
+                <div class="terminal-line">Connection to Discord Gateway: <span style="color:#27c93f">ESTABLISHED</span></div>
+                <div class="terminal-line">Type <span style="color:#fff">;help</span> to view available commands.</div>
+                <br>
+                <div class="terminal-line terminal-input-line">
+                    <span class="terminal-prompt">root@hexa:~#</span>
+                    <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" autofocus>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <section id="features" style="margin-top: 4rem;">
             <h2 class="section-title">System_Capabilities</h2>
             <div class="bento-grid">
-                <div class="card card-large tilt">
+                <div class="card card-large">
                     <h3><i class="fa-solid fa-shield-halved"></i> Core_Protocol</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 1rem;">The fundamental defense layer deployed on every server.</p>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">The fundamental defense layer deployed on every server to stop malicious content at the hash level.</p>
                     <ul>
                         <li><i class="fa-solid fa-angle-right"></i> Perceptual Hashing (pHash/dHash) fingerprinting</li>
-                        <li><i class="fa-solid fa-angle-right"></i> Automated Image Deletion</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Automated Image Deletion on match</li>
                         <li><i class="fa-solid fa-angle-right"></i> DM Notifications to compromised accounts</li>
                         <li><i class="fa-solid fa-angle-right"></i> Admin Security Logging</li>
                     </ul>
                 </div>
-                <div class="card tilt" style="border-top: 3px solid var(--discord-yellow);">
-                    <h3 style="color: var(--discord-yellow);"><i class="fa-solid fa-crown"></i> Premium_Modules</h3>
+                <div class="card" style="border-top: 3px solid var(--warning);">
+                    <h3 style="color: var(--warning);"><i class="fa-solid fa-crown"></i> Premium</h3>
                     <ul>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> Advanced Punishments</li>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> Link/URL Scanning</li>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--discord-yellow);"></i> QR Phishing Detection</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--warning);"></i> Advanced Punishments</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--warning);"></i> Malicious Link Scanning</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--warning);"></i> QR Phishing Detection</li>
                     </ul>
                 </div>
-                <div class="card tilt" style="border-top: 3px solid var(--danger);">
-                    <h3 style="color: var(--danger);"><i class="fa-solid fa-code"></i> Root_Access</h3>
+                <div class="card" style="border-top: 3px solid var(--danger);">
+                    <h3 style="color: var(--danger);"><i class="fa-solid fa-code"></i> Root Access</h3>
                     <ul>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Global Blocklist Push</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Global Blocklist</li>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Premium Management</li>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Global Ban/Unban</li>
                     </ul>
@@ -309,26 +320,23 @@
         </section>
 
         <!-- Carousel -->
-        <section id="interface" class="reveal" style="margin-top: 6rem;">
+        <section id="interface" style="margin-top: 6rem;">
             <h2 class="section-title">UI_Terminal</h2>
-            <p style="margin-bottom: 2rem; color: var(--text-muted);">Scroll horizontally to view bot responses.</p>
             <div class="carousel-track">
                 <div class="carousel-item"><img src="free-commands.jpg" alt="Free Commands"></div>
                 <div class="carousel-item"><img src="premium-commands.jpg" alt="Premium Commands"></div>
             </div>
         </section>
-
-        <!-- Commands -->
-        <section id="commands" class="reveal" style="margin-top: 6rem;">
+                <!-- Commands -->
+        <section id="commands" style="margin-top: 6rem;">
             <h2 class="section-title">Command_Registry</h2>
             
-            <!-- Free -->
-            <div class="command-container tilt">
+            <div class="command-category">
                 <div class="command-header">
                     <span><i class="fa-solid fa-user"></i> Public_Functions</span>
                     <span class="badge free">Free</span>
                 </div>
-                <div class="command-body">
+                <div class="command-list">
                     <div class="cmd-item"><code>;imgban [note]</code> <span class="cmd-desc">Reply to an image to add its hash to the blocklist.</span></div>
                     <div class="cmd-item"><code>;imgunban <id></code> <span class="cmd-desc">Remove a blocked hash from the server.</span></div>
                     <div class="cmd-item"><code>;imglist</code> <span class="cmd-desc">Browse the server's blocked hashes.</span></div>
@@ -340,213 +348,103 @@
                 </div>
             </div>
 
-            <!-- Premium -->
-            <div class="command-container tilt" style="border-color: rgba(240, 178, 50, 0.3);">
-                <div class="command-header" style="background: rgba(240, 178, 50, 0.05); border-bottom-color: rgba(240, 178, 50, 0.3);">
+            <div class="command-category" style="border-color: rgba(252, 238, 10, 0.3);">
+                <div class="command-header" style="background: rgba(252, 238, 10, 0.05); border-bottom-color: rgba(252, 238, 10, 0.3);">
                     <span><i class="fa-solid fa-crown"></i> Premium_Functions</span>
                     <span class="badge premium">Premium</span>
                 </div>
-                <div class="command-body">
-                    <div class="cmd-item"><code>;imgconfig punishment <timeout|softban|ban></code> <span class="cmd-desc">Unlocks higher-tier punishments.</span></div>
-                    <div class="cmd-item"><code>;qrban <payload></code> <span class="cmd-desc">Block a QR code by its payload.</span></div>
-                    <div class="cmd-item"><code>;qrunban <id></code> <span class="cmd-desc">Remove a blocked QR payload.</span></div>
-                    <div class="cmd-item"><code>;qrlist</code> <span class="cmd-desc">Browse blocked QR payloads.</span></div>
-                    <div class="cmd-item"><code>;imgconfig qr <on|off></code> <span class="cmd-desc">Toggle QR scanning.</span></div>
-                    <div class="cmd-item"><code>;domainban <domain></code> <span class="cmd-desc">Block a URL domain.</span></div>
-                    <div class="cmd-item"><code>;domainunban <id></code> <span class="cmd-desc">Unblock a domain.</span></div>
-                    <div class="cmd-item"><code>;domainlist</code> <span class="cmd-desc">Browse blocked domains.</span></div>
-                    <div class="cmd-item"><code>;imgconfig links <on|off></code> <span class="cmd-desc">Toggle link scanning.</span></div>
+                <div class="command-list">
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig punishment <timeout|softban|ban></code> <span class="cmd-desc">Unlocks higher-tier punishments.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrban <payload></code> <span class="cmd-desc">Block a QR code by its payload.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrunban <id></code> <span class="cmd-desc">Remove a blocked QR payload.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrlist</code> <span class="cmd-desc">Browse blocked QR payloads.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig qr <on|off></code> <span class="cmd-desc">Toggle QR scanning.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainban <domain></code> <span class="cmd-desc">Block a URL domain.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainunban <id></code> <span class="cmd-desc">Unblock a domain.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainlist</code> <span class="cmd-desc">Browse blocked domains.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig links <on|off></code> <span class="cmd-desc">Toggle link scanning.</span></div>
                 </div>
             </div>
 
-            <!-- Dev -->
-            <div class="command-container tilt" style="border-color: rgba(255, 0, 85, 0.3);">
-                <div class="command-header" style="background: rgba(255, 0, 85, 0.05); border-bottom-color: rgba(255, 0, 85, 0.3);">
+            <div class="command-category" style="border-color: rgba(255, 0, 60, 0.3);">
+                <div class="command-header" style="background: rgba(255, 0, 60, 0.05); border-bottom-color: rgba(255, 0, 60, 0.3);">
                     <span><i class="fa-solid fa-terminal"></i> Root_Functions</span>
                     <span class="badge dev">Dev</span>
                 </div>
-                <div class="command-body">
-                    <div class="cmd-item"><code>;globalban [note]</code> <span class="cmd-desc">Block image across all servers.</span></div>
-                    <div class="cmd-item"><code>;globalunban <id></code> <span class="cmd-desc">Remove hash from global blocklist.</span></div>
-                    <div class="cmd-item"><code>;globallist</code> <span class="cmd-desc">View the global blocklist.</span></div>
-                    <div class="cmd-item"><code>;premium add <guild_id> [days]</code> <span class="cmd-desc">Grant premium access.</span></div>
-                    <div class="cmd-item"><code>;premium remove <guild_id></code> <span class="cmd-desc">Revoke premium access.</span></div>
+                <div class="command-list">
+                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globalban [note]</code> <span class="cmd-desc">Block image across all servers.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globalunban <id></code> <span class="cmd-desc">Remove hash from global blocklist.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globallist</code> <span class="cmd-desc">View the global blocklist.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;premium add <guild_id> [days]</code> <span class="cmd-desc">Grant premium access.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;premium remove <guild_id></code> <span class="cmd-desc">Revoke premium access.</span></div>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <span>System built by</span>
-        <a href="https://discord.com/users/1378954077462986772" target="_blank"><img src="dev-avatar.jpg" alt="shadow" class="dev-avatar"></a>
-        <span><a href="https://discord.com/users/1378954077462986772" target="_blank">shadow</a></span>
+        <div>System built by</div>
+        <a href="https://discord.com/users/1378954077462986772" target="_blank" class="dev-link">
+            <img src="dev-avatar.jpg" alt="shadow" class="dev-avatar"> shadow
+        </a>
     </footer>
 
     <script>
-        // --- 1. CUSTOM CURSOR LOGIC ---
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorOutline = document.querySelector('.cursor-outline');
+        // --- INTERACTIVE TERMINAL SCRIPT ---
+        const terminalBody = document.getElementById('terminal-body');
+        const terminalInput = document.getElementById('terminal-input');
         
-        window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-            
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-            
-            // Smooth trailing for outline
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
-        });
+        const responses = {
+            ';help': 'Available commands:<br>;imgban - Block an image<br>;imgconfig - Configure settings<br>;status - Check system status<br>;clear - Clear terminal',
+            ';status': 'System Status: <span style="color:#27c93f">ONLINE</span><br>Uptime: 99.99%<br>Global Hashes: 14,203<br>Ping: 12ms',
+            ';imgban': 'Error: You must reply to an image with this command.',
+            ';imgconfig': 'Opening configuration panel...<br>Threshold: 5<br>Punishment: kick<br>DM Warnings: ON',
+            ';clear': 'CLEAR'
+        };
 
-        // Hover effect on links/buttons
-        document.querySelectorAll('a, button, .card').forEach(el => {
-            el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
-        });
-
-        // --- 2. INTERACTIVE PARTICLE CANVAS ---
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particlesArray;
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let mouse = { x: null, y: null, radius: 150 };
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x; mouse.y = e.y;
-        });
-
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = '#00f0ff'; // Primary color
-                ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
-                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-
-                // Collision with mouse
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius + this.size) {
-                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 10;
-                    if (mouse.x > this.x && this.x > this.size * 10) this.x -= 10;
-                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 10;
-                    if (mouse.y > this.y && this.y > this.size * 10) this.y -= 10;
-                }
-                this.x += this.directionX;
-                this.y += this.directionY;
-                this.draw();
-            }
-        }
-
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 15000; // Adjust density here
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 1) - 0.5;
-                let directionY = (Math.random() * 1) - 0.5;
-                particlesArray.push(new Particle(x, y, directionX, directionY, size));
-            }
-        }
-
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width / 10) * (canvas.height / 10)) {
-                        opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = `rgba(0, 240, 255, ${opacityValue * 0.2})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
+        terminalInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = this.value.toLowerCase().trim();
+                this.value = '';
+                
+                // Add user input to terminal
+                addLine(`root@hexa:~# ${command}`, '#fff');
+                
+                // Handle response
+                setTimeout(() => {
+                    if (command === ';clear') {
+                        terminalBody.innerHTML = '';
+                        addInputLine();
+                    } else if (responses[command]) {
+                        addLine(responses[command], 'var(--terminal-text)');
+                    } else if (command !== '') {
+                        addLine(`Command not found: ${command}. Type ;help for a list of commands.`, '#ff5f56');
                     }
-                }
+                }, 200);
             }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-            }
-            connect();
-        }
-
-        window.addEventListener('resize', () => {
-            canvas.width = innerWidth; canvas.height = innerHeight;
-            init();
         });
 
-        init();
-        animate();
-
-        // --- 3. 3D TILT EFFECT ON CARDS ---
-        const tiltCards = document.querySelectorAll('.tilt');
-        tiltCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -10;
-                const rotateY = ((x - centerX) / centerX) * 10;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-            });
-        });
-
-        // --- 4. TYPEWRITER EFFECT ---
-        const text = "A highly secure, perceptual-hash image blocklist. Stop scam images, phishing QR codes, and malicious links in their tracks—even if attackers re-compress them.";
-        const typingElement = document.getElementById('typing-text');
-        let i = 0;
-        
-        function typeWriter() {
-            if (i < text.length) {
-                typingElement.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 30);
-            }
+        function addLine(text, color) {
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.style.color = color;
+            line.innerHTML = text;
+            terminalBody.insertBefore(line, terminalBody.lastElementChild);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
         }
-        setTimeout(typeWriter, 500);
 
-        // --- 5. SCROLL REVEAL ---
-        const revealElements = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
+        function addInputLine() {
+            const inputLine = document.createElement('div');
+            inputLine.className = 'terminal-line terminal-input-line';
+            inputLine.innerHTML = `
+                <span class="terminal-prompt">root@hexa:~#</span>
+                <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" autofocus>
+            `;
+            terminalBody.appendChild(inputLine);
+            document.getElementById('terminal-input').focus();
+        }
 
-        revealElements.forEach(el => observer.observe(el));
-                // --- 6. THEME TOGGLE ---
+        // --- THEME TOGGLE ---
         const themeToggleBtn = document.getElementById('themeToggle');
         const themeIcon = themeToggleBtn.querySelector('i');
         const htmlElement = document.documentElement;
