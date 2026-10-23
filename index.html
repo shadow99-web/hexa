@@ -73,18 +73,6 @@
             100% { background-position: 40px 40px; }
         }
 
-        /* Preloader */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; color: var(--primary); font-family: 'Fira Code', monospace;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 99999; transition: opacity 0.5s ease;
-        }
-        #preloader.hidden { opacity: 0; pointer-events: none; }
-        .boot-text { width: 80%; max-width: 600px; font-size: 0.9rem; text-align: left; line-height: 1.8; }
-        .boot-line { margin-bottom: 5px; }
-        .boot-success { color: var(--success); }
-
         /* Navigation */
         nav {
             position: fixed; top: 0; width: 100%; padding: 1rem 5%;
@@ -266,15 +254,6 @@
 </head>
 <body>
 
-    <div id="preloader">
-        <div class="boot-text">
-            <div class="boot-line">> INITIALIZING HEXA SECURITY CORE...</div>
-            <div class="boot-line">> BYPASSING FIREWALL...</div>
-            <div class="boot-line">> ESTABLISHING CONNECTION TO DISCORD GATEWAY...</div>
-            <div class="boot-line boot-success">> ACCESS GRANTED.</div>
-        </div>
-    </div>
-
     <nav>
         <div class="logo"><i class="fa-solid fa-hexagon-nodes"></i> HEXA</div>
         <div class="nav-links">
@@ -302,7 +281,6 @@
             <h1 class="gsap-reveal">SYSTEM<br>SECURED.</h1>
             <p class="gsap-reveal">A highly secure, perceptual-hash image blocklist for Discord. Stop scam images, phishing QR codes, and malicious links in their tracks—even if attackers try to resize or re-compress them.</p>
             <div class="btn-group gsap-reveal">
-                <!-- Magnetic Button Wrapper -->
                 <div class="btn-container magnetic">
                     <a href="https://discord.com/oauth2/authorize?client_id=1562186060824576070&permissions=8&integration_type=0&scope=bot+applications.commands" target="_blank" class="btn btn-primary">
                         <i class="fa-brands fa-discord"></i> Initialize
@@ -342,7 +320,7 @@
         </div>
 
         <section id="features" style="margin-top: 4rem;">
-            <h2 class="section-title gsap-reveal">System_Capabilities</h2>
+            <h2 class="section-title gsap-reveal" data-scramble="System_Capabilities">System_Capabilities</h2>
             <div class="bento-grid">
                 <div class="card card-large tilt gsap-reveal">
                     <h3><i class="fa-solid fa-shield-halved"></i> Core_Protocol</h3>
@@ -374,7 +352,7 @@
         </section>
 
         <section id="interface" style="margin-top: 6rem;">
-            <h2 class="section-title gsap-reveal">UI_Terminal</h2>
+            <h2 class="section-title gsap-reveal" data-scramble="UI_Terminal">UI_Terminal</h2>
             <div class="carousel-track gsap-reveal">
                 <div class="carousel-item"><img src="free-commands.jpg" alt="Free Commands"></div>
                 <div class="carousel-item"><img src="premium-commands.jpg" alt="Premium Commands"></div>
@@ -382,7 +360,7 @@
         </section>
 
         <section id="commands" style="margin-top: 6rem;">
-            <h2 class="section-title gsap-reveal">Command_Registry</h2>
+            <h2 class="section-title gsap-reveal" data-scramble="Command_Registry">Command_Registry</h2>
             
             <div class="command-category tilt gsap-reveal">
                 <div class="command-header">
@@ -476,14 +454,13 @@
         gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
         gsap.ticker.lagSmoothing(0);
 
-        // Animate elements in
         const revealElements = document.querySelectorAll('.gsap-reveal');
         
         revealElements.forEach((el) => {
             gsap.to(el, {
                 scrollTrigger: {
                     trigger: el,
-                    start: "top 85%", // Trigger when element is 85% from top
+                    start: "top 85%",
                     toggleActions: "play none none none"
                 },
                 opacity: 1,
@@ -531,14 +508,39 @@
             scale: 1.02
         });
 
-        // --- 5. BOOT PRELOADER SCRIPT ---
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const preloader = document.getElementById('preloader');
-                preloader.classList.add('hidden');
-                setTimeout(() => { preloader.remove(); }, 500); 
-            }, 2000); 
-        });
+        // --- 5. MATRIX TEXT SCRAMBLE ---
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:<>?";
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const originalText = el.dataset.scramble;
+                    let iterations = 0;
+                    
+                    const interval = setInterval(() => {
+                        el.innerText = el.innerText.split("")
+                            .map((letter, index) => {
+                                if(index < iterations) {
+                                    return originalText[index];
+                                }
+                                return letters[Math.floor(Math.random() * letters.length)]
+                            })
+                            .join("");
+                        
+                        if (iterations >= originalText.length) {
+                            clearInterval(interval);
+                        }
+                        
+                        iterations += 1 / 3;
+                    }, 30);
+                    
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.section-title').forEach(el => observer.observe(el));
 
         // --- INTERACTIVE TERMINAL SCRIPT ---
         const terminalBody = document.getElementById('terminal-body');
