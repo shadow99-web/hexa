@@ -49,10 +49,9 @@
             font-family: 'Space Grotesk', sans-serif;
             scrollbar-width: thin;
             scrollbar-color: var(--primary) var(--bg-color);
-            cursor: crosshair; /* Cyberpunk crosshair cursor */
+            cursor: crosshair;
         }
 
-        /* Re-enable normal cursor for inputs/links */
         a, button, input, .cmd-item code { cursor: pointer; }
         .terminal-input { cursor: text; }
 
@@ -74,6 +73,18 @@
             100% { background-position: 40px 40px; }
         }
 
+        /* Preloader */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; color: var(--primary); font-family: 'Fira Code', monospace;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 99999; transition: opacity 0.5s ease;
+        }
+        #preloader.hidden { opacity: 0; pointer-events: none; }
+        .boot-text { width: 80%; max-width: 600px; font-size: 0.9rem; text-align: left; line-height: 1.8; }
+        .boot-line { margin-bottom: 5px; }
+        .boot-success { color: var(--success); }
+
         /* Navigation */
         nav {
             position: fixed; top: 0; width: 100%; padding: 1rem 5%;
@@ -86,7 +97,7 @@
         .logo i { color: var(--primary); }
 
         .nav-links { display: flex; gap: 2rem; }
-        .nav-links a { color: var(--text-muted); font-family: 'Fira Code', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;}
+        .nav-links a { color: var(--text-muted); font-family: 'Fira Code', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none;}
         .nav-links a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
 
         .theme-toggle {
@@ -96,41 +107,21 @@
         }
         .theme-toggle:hover { background: var(--primary-glow); }
 
-        /* --- NEW: LIVE THREAT TICKER --- */
+        /* Live Threat Ticker */
         .ticker-wrap {
-            position: fixed;
-            top: 65px; /* Right below nav */
-            width: 100%;
-            overflow: hidden;
-            background: rgba(255, 0, 60, 0.1);
-            border-bottom: 1px solid rgba(255, 0, 60, 0.3);
-            z-index: 999;
-            padding: 5px 0;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
-            color: var(--danger);
+            position: fixed; top: 65px; width: 100%; overflow: hidden;
+            background: rgba(255, 0, 60, 0.1); border-bottom: 1px solid rgba(255, 0, 60, 0.3);
+            z-index: 999; padding: 5px 0; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: var(--danger);
         }
-
-        .ticker {
-            display: inline-block;
-            white-space: nowrap;
-            padding-left: 100%;
-            animation: ticker 25s linear infinite;
-        }
-
+        .ticker { display: inline-block; white-space: nowrap; padding-left: 100%; animation: ticker 25s linear infinite; }
         .ticker-item { padding-right: 50px; }
         .ticker-item i { margin-right: 5px; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-
-        /* Hero Section - Bulletproof Responsive Grid */
+        /* Hero Section */
         .hero {
             min-height: 100vh;
             display: grid;
-            /* Auto-fit handles desktop and mobile perfectly */
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             align-items: center;
             padding: 8rem 5% 4rem 5%;
@@ -141,6 +132,23 @@
         
         .hero-content { z-index: 2; }
         
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'Fira Code', monospace; font-size: 0.8rem;
+            color: var(--success); background: rgba(39, 201, 63, 0.1);
+            padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(39, 201, 63, 0.3);
+            margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .status-dot {
+            width: 8px; height: 8px; background-color: var(--success); border-radius: 50%;
+            box-shadow: 0 0 10px var(--success); animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 201, 63, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 201, 63, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 201, 63, 0); }
+        }
+
         .hero h1 {
             font-family: 'Syncopate', sans-serif;
             font-size: clamp(2.5rem, 5vw, 4.5rem);
@@ -149,16 +157,13 @@
             text-shadow: 4px 4px 0px var(--primary-glow);
         }
 
-        .hero-subtitle {
-            font-family: 'Fira Code', monospace; color: var(--primary);
-            font-size: 1.1rem; margin-bottom: 2rem;
-            display: inline-block; padding: 5px 10px;
-            border-left: 3px solid var(--primary); background: rgba(0,240,255,0.05);
-        }
-
         .hero p { color: var(--text-muted); max-width: 500px; margin-bottom: 2.5rem; font-size: 1.1rem; }
 
         .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        
+        /* Magnetic Button Base */
+        .btn-container { display: inline-block; }
+        
         .btn {
             padding: 1rem 2rem; font-family: 'Fira Code', monospace; font-weight: 600;
             display: flex; align-items: center; gap: 10px; transition: 0.3s;
@@ -167,86 +172,55 @@
         }
         
         .btn-primary { background: var(--primary); color: #000; border: none; box-shadow: 0 0 20px var(--primary-glow); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 30px var(--primary-glow); }
+        .btn-primary:hover { box-shadow: 0 0 30px var(--primary-glow); }
         
         .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
-        .btn-outline:hover { background: rgba(0, 240, 255, 0.1); transform: translateY(-3px); }
+        .btn-outline:hover { background: rgba(0, 240, 255, 0.1); }
 
-        /* HERO IMAGE */
-        .hero-image {
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-        }
+        .hero-image { display: flex; justify-content: center; align-items: center; }
         .hero-image img {
-            width: 100%; 
-            max-width: 100%; 
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.5);
-            border: 1px solid var(--card-border);
+            width: 100%; max-width: 100%; height: auto; border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5); border: 1px solid var(--card-border);
         }
 
-        /* Interactive Terminal Window */
+        /* Terminal */
         .terminal-window {
-            background: var(--terminal-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            max-width: 900px;
-            margin: 0 auto 4rem auto;
-            position: relative; z-index: 10;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px var(--primary-glow);
-            overflow: hidden;
+            background: var(--terminal-bg); border: 1px solid var(--card-border); border-radius: 8px;
+            max-width: 900px; margin: 0 auto 4rem auto; position: relative; z-index: 10;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px var(--primary-glow); overflow: hidden;
         }
-
-        .terminal-header {
-            background: #1a1b1e; padding: 10px 15px; display: flex; align-items: center; gap: 8px;
-            border-bottom: 1px solid #333;
-        }
+        .terminal-header { background: #1a1b1e; padding: 10px 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #333; }
         .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
         .dot-red { background: #ff5f56; } .dot-yellow { background: #ffbd2e; } .dot-green { background: #27c93f; }
         .terminal-title { color: #888; font-family: 'Fira Code', monospace; font-size: 0.8rem; margin-left: 10px; }
-
-        .terminal-body {
-            padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.95rem;
-            color: var(--terminal-text); height: 250px; overflow-y: auto;
-        }
-
+        .terminal-body { padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.95rem; color: var(--terminal-text); height: 250px; overflow-y: auto; }
         .terminal-line { margin-bottom: 8px; }
         .terminal-prompt { color: #27c93f; margin-right: 10px; }
-        
         .terminal-input-line { display: flex; align-items: center; }
-        .terminal-input {
-            background: transparent; border: none; color: var(--text-main);
-            font-family: 'Fira Code', monospace; font-size: 0.95rem;
-            outline: none; width: 100%; margin-left: 10px;
-        }
+        .terminal-input { background: transparent; border: none; color: var(--text-main); font-family: 'Fira Code', monospace; font-size: 0.95rem; outline: none; width: 100%; margin-left: 10px; }
 
-        /* Features / Bento Grid */
+        /* Features */
         .container { max-width: 1200px; margin: 0 auto; padding: 4rem 5%; position: relative; z-index: 2; }
+        
         .section-title {
             font-family: 'Syncopate', sans-serif; font-size: 2.5rem; margin-bottom: 3rem;
             text-align: center; text-transform: uppercase;
         }
 
         .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-
+        
+        /* 3D Tilt Cards */
         .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            padding: 2rem;
-            transition: 0.3s;
+            background: var(--card-bg); border: 1px solid var(--card-border); padding: 2rem; transition: 0.3s;
             clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px));
             backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
         }
-
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
-
+        .card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
         .card-large { grid-column: span 2; grid-row: span 2; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, rgba(0,240,255,0.05) 0%, transparent 100%); }
-        
-        .card h3 { font-family: 'Syncopate', sans-serif; font-size: 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary); text-transform: uppercase; }
+        .card h3 { font-family: 'Syncopate', sans-serif; font-size: 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary); text-transform: uppercase; transform: translateZ(30px); }
         .card h3 i { font-size: 1.5rem; }
-        .card ul { list-style: none; }
+        .card ul { list-style: none; transform: translateZ(20px); }
         .card ul li { color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; font-size: 1rem; }
         .card ul li i { color: var(--primary); margin-top: 5px; }
 
@@ -256,19 +230,12 @@
         .carousel-item { flex: 0 0 auto; width: 85%; max-width: 600px; scroll-snap-align: center; border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .carousel-item img { width: 100%; display: block; }
 
-        /* Command Registry */
+        /* Commands */
         .command-category { margin-bottom: 2rem; background: var(--card-bg); border: 1px solid var(--card-border); }
         .command-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; background: rgba(0,240,255,0.05); }
         .command-list { padding: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
         .cmd-item { border-left: 2px solid var(--primary); padding-left: 15px; }
-        
-        /* Reverted to standard code block */
-        .cmd-item code { 
-            font-family: 'Fira Code', monospace; color: var(--primary); font-size: 1rem; 
-            background: rgba(0,240,255,0.1); padding: 4px 8px; border-radius: 4px; 
-            display: inline-block;
-        }
-        
+        .cmd-item code { font-family: 'Fira Code', monospace; color: var(--primary); font-size: 1rem; background: rgba(0,240,255,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; }
         .cmd-desc { display: block; color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
         
         .badge { font-family: 'Fira Code', monospace; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; }
@@ -281,7 +248,6 @@
         .dev-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text-main); margin-top: 10px; text-decoration: none;}
         .dev-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); }
 
-        /* Responsive */
         @media (max-width: 900px) {
             .hero { padding-top: 120px; text-align: center; }
             .hero p { margin: 0 auto 2.5rem auto; }
@@ -291,10 +257,23 @@
             .terminal-window { margin: 2rem auto; width: 95%; }
             .nav-links { display: none; }
             .section-title { font-size: 1.8rem; }
+            .status-badge { margin: 0 auto 1rem auto; }
         }
+        
+        /* GSAP Reveal Classes */
+        .gsap-reveal { opacity: 0; transform: translateY(50px); }
     </style>
 </head>
 <body>
+
+    <div id="preloader">
+        <div class="boot-text">
+            <div class="boot-line">> INITIALIZING HEXA SECURITY CORE...</div>
+            <div class="boot-line">> BYPASSING FIREWALL...</div>
+            <div class="boot-line">> ESTABLISHING CONNECTION TO DISCORD GATEWAY...</div>
+            <div class="boot-line boot-success">> ACCESS GRANTED.</div>
+        </div>
+    </div>
 
     <nav>
         <div class="logo"><i class="fa-solid fa-hexagon-nodes"></i> HEXA</div>
@@ -306,41 +285,44 @@
         <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
     </nav>
 
-    <!-- NEW: LIVE THREAT TICKER -->
     <div class="ticker-wrap">
         <div class="ticker">
             <span class="ticker-item"><i class="fa-solid fa-triangle-exclamation"></i> [BLOCKED] Phishing QR detected from IP 192.168.x.x</span>
             <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> [BLOCKED] Malicious hash #a4f9b... intercepted</span>
             <span class="ticker-item"><i class="fa-solid fa-link-slash"></i> [BLOCKED] Scam domain (discord-nitro-gift.com) neutralized</span>
             <span class="ticker-item"><i class="fa-solid fa-user-shield"></i> [SYSTEM] Global blocklist updated across 4,201 servers</span>
-            <span class="ticker-item"><i class="fa-solid fa-triangle-exclamation"></i> [BLOCKED] Phishing QR detected from IP 192.168.x.x</span>
-            <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> [BLOCKED] Malicious hash #a4f9b... intercepted</span>
         </div>
     </div>
 
     <header class="hero">
         <div class="hero-content">
-            <h1>SYSTEM<br>SECURED.</h1>
-            <div class="hero-subtitle">> Aegis Protocol Activated</div>
-            <p>A highly secure, perceptual-hash image blocklist for Discord. Stop scam images, phishing QR codes, and malicious links in their tracks—even if attackers try to resize or re-compress them.</p>
-            <div class="btn-group">
-                <a href="https://discord.com/oauth2/authorize?client_id=1562186060824576070&permissions=8&integration_type=0&scope=bot+applications.commands" target="_blank" class="btn btn-primary">
-                    <i class="fa-brands fa-discord"></i> Initialize
-                </a>
-                <a href="#features" class="btn btn-outline">
-                    <i class="fa-solid fa-terminal"></i> Explore
-                </a>
+            <div class="status-badge gsap-reveal">
+                <div class="status-dot"></div> System Online
+            </div>
+            <h1 class="gsap-reveal">SYSTEM<br>SECURED.</h1>
+            <p class="gsap-reveal">A highly secure, perceptual-hash image blocklist for Discord. Stop scam images, phishing QR codes, and malicious links in their tracks—even if attackers try to resize or re-compress them.</p>
+            <div class="btn-group gsap-reveal">
+                <!-- Magnetic Button Wrapper -->
+                <div class="btn-container magnetic">
+                    <a href="https://discord.com/oauth2/authorize?client_id=1562186060824576070&permissions=8&integration_type=0&scope=bot+applications.commands" target="_blank" class="btn btn-primary">
+                        <i class="fa-brands fa-discord"></i> Initialize
+                    </a>
+                </div>
+                <div class="btn-container magnetic">
+                    <a href="#features" class="btn btn-outline">
+                        <i class="fa-solid fa-terminal"></i> Explore
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="hero-image">
+        <div class="hero-image gsap-reveal">
             <img src="hexa-banner.jpg" alt="HEXA">
         </div>
     </header>
 
     <main class="container">
         
-        <!-- INTERACTIVE TERMINAL -->
-        <div class="terminal-window">
+        <div class="terminal-window gsap-reveal">
             <div class="terminal-header">
                 <div class="terminal-dot dot-red"></div>
                 <div class="terminal-dot dot-yellow"></div>
@@ -359,11 +341,10 @@
             </div>
         </div>
 
-        <!-- Features -->
         <section id="features" style="margin-top: 4rem;">
-            <h2 class="section-title">System_Capabilities</h2>
+            <h2 class="section-title gsap-reveal">System_Capabilities</h2>
             <div class="bento-grid">
-                <div class="card card-large">
+                <div class="card card-large tilt gsap-reveal">
                     <h3><i class="fa-solid fa-shield-halved"></i> Core_Protocol</h3>
                     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">The fundamental defense layer deployed on every server to stop malicious content at the hash level.</p>
                     <ul>
@@ -373,7 +354,7 @@
                         <li><i class="fa-solid fa-angle-right"></i> Admin Security Logging</li>
                     </ul>
                 </div>
-                <div class="card" style="border-top: 3px solid var(--warning);">
+                <div class="card tilt gsap-reveal" style="border-top: 3px solid var(--warning);">
                     <h3 style="color: var(--warning);"><i class="fa-solid fa-crown"></i> Premium</h3>
                     <ul>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--warning);"></i> Advanced Punishments</li>
@@ -381,7 +362,7 @@
                         <li><i class="fa-solid fa-angle-right" style="color: var(--warning);"></i> QR Phishing Detection</li>
                     </ul>
                 </div>
-                <div class="card" style="border-top: 3px solid var(--danger);">
+                <div class="card tilt gsap-reveal" style="border-top: 3px solid var(--danger);">
                     <h3 style="color: var(--danger);"><i class="fa-solid fa-code"></i> Root Access</h3>
                     <ul>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Global Blocklist</li>
@@ -392,20 +373,18 @@
             </div>
         </section>
 
-        <!-- Carousel -->
         <section id="interface" style="margin-top: 6rem;">
-            <h2 class="section-title">UI_Terminal</h2>
-            <div class="carousel-track">
+            <h2 class="section-title gsap-reveal">UI_Terminal</h2>
+            <div class="carousel-track gsap-reveal">
                 <div class="carousel-item"><img src="free-commands.jpg" alt="Free Commands"></div>
                 <div class="carousel-item"><img src="premium-commands.jpg" alt="Premium Commands"></div>
             </div>
         </section>
 
-        <!-- Commands -->
         <section id="commands" style="margin-top: 6rem;">
-            <h2 class="section-title">Command_Registry</h2>
+            <h2 class="section-title gsap-reveal">Command_Registry</h2>
             
-            <div class="command-category">
+            <div class="command-category tilt gsap-reveal">
                 <div class="command-header">
                     <span><i class="fa-solid fa-user"></i> Public_Functions</span>
                     <span class="badge free">Free</span>
@@ -422,7 +401,7 @@
                 </div>
             </div>
 
-            <div class="command-category" style="border-color: rgba(252, 238, 10, 0.3);">
+            <div class="command-category tilt gsap-reveal" style="border-color: rgba(252, 238, 10, 0.3);">
                 <div class="command-header" style="background: rgba(252, 238, 10, 0.05); border-bottom-color: rgba(252, 238, 10, 0.3);">
                     <span><i class="fa-solid fa-crown"></i> Premium_Functions</span>
                     <span class="badge premium">Premium</span>
@@ -440,7 +419,7 @@
                 </div>
             </div>
 
-            <div class="command-category" style="border-color: rgba(255, 0, 60, 0.3);">
+            <div class="command-category tilt gsap-reveal" style="border-color: rgba(255, 0, 60, 0.3);">
                 <div class="command-header" style="background: rgba(255, 0, 60, 0.05); border-bottom-color: rgba(255, 0, 60, 0.3);">
                     <span><i class="fa-solid fa-terminal"></i> Root_Functions</span>
                     <span class="badge dev">Dev</span>
@@ -463,7 +442,104 @@
         </a>
     </footer>
 
+    <!-- EXTERNAL LIBRARIES FOR ULTIMATE ANIMATIONS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
     <script>
+        // --- 1. LENIS SMOOTH SCROLLING ---
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // --- 2. GSAP SCROLL REVEAL ANIMATIONS ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Sync Lenis with ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
+        gsap.ticker.lagSmoothing(0);
+
+        // Animate elements in
+        const revealElements = document.querySelectorAll('.gsap-reveal');
+        
+        revealElements.forEach((el) => {
+            gsap.to(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%", // Trigger when element is 85% from top
+                    toggleActions: "play none none none"
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        // --- 3. MAGNETIC BUTTONS (GSAP) ---
+        const magneticElements = document.querySelectorAll('.magnetic');
+
+        magneticElements.forEach((el) => {
+            const btn = el.querySelector('.btn');
+            
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                gsap.to(btn, {
+                    x: x * 0.3,
+                    y: y * 0.3,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+
+            el.addEventListener('mouseleave', () => {
+                gsap.to(btn, {
+                    x: 0,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "elastic.out(1, 0.3)"
+                });
+            });
+        });
+
+        // --- 4. 3D TILT CARDS (VANILLA TILT) ---
+        VanillaTilt.init(document.querySelectorAll(".tilt"), {
+            max: 10,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2,
+            scale: 1.02
+        });
+
+        // --- 5. BOOT PRELOADER SCRIPT ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                preloader.classList.add('hidden');
+                setTimeout(() => { preloader.remove(); }, 500); 
+            }, 2000); 
+        });
+
         // --- INTERACTIVE TERMINAL SCRIPT ---
         const terminalBody = document.getElementById('terminal-body');
         const terminalInput = document.getElementById('terminal-input');
