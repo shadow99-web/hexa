@@ -19,6 +19,7 @@
             --danger: #ff003c;
             --warning: #fcee0a;
             --success: #27c93f;
+            --huggingface: #ffd21e;
             
             --card-bg: rgba(10, 15, 25, 0.8);
             --card-border: rgba(0, 240, 255, 0.2);
@@ -148,8 +149,6 @@
         .hero p { color: var(--text-muted); max-width: 500px; margin-bottom: 2.5rem; font-size: 1.1rem; }
 
         .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
-        
-        /* Magnetic Button Base */
         .btn-container { display: inline-block; }
         
         .btn {
@@ -187,22 +186,61 @@
         .terminal-input-line { display: flex; align-items: center; }
         .terminal-input { background: transparent; border: none; color: var(--text-main); font-family: 'Fira Code', monospace; font-size: 0.95rem; outline: none; width: 100%; margin-left: 10px; }
 
-        /* Features */
+        /* Sections */
         .container { max-width: 1200px; margin: 0 auto; padding: 4rem 5%; position: relative; z-index: 2; }
-        
         .section-title {
             font-family: 'Syncopate', sans-serif; font-size: 2.5rem; margin-bottom: 3rem;
             text-align: center; text-transform: uppercase;
         }
 
-        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        /* Profile Card Section */
+        .profile-section {
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4rem; margin-top: 6rem;
+        }
+        .profile-text { flex: 1 1 400px; }
+        .profile-text h2 { font-family: 'Syncopate', sans-serif; font-size: 2rem; color: var(--primary); margin-bottom: 1rem; }
+        .profile-text p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem; }
         
-        /* 3D Tilt Cards */
+        .profile-card-mockup {
+            flex: 1 1 300px; display: flex; justify-content: center;
+        }
+        .mockup-card {
+            width: 320px; height: 450px;
+            background: linear-gradient(135deg, rgba(10,15,25,1) 0%, rgba(0,240,255,0.1) 100%);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px rgba(0,240,255,0.1);
+            display: flex; flex-direction: column; align-items: center; padding-top: 40px;
+            transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+            transition: 0.5s;
+        }
+        .mockup-card:hover { transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.05); }
+        .mockup-banner-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 120px;
+            background: url('hexa-banner.jpg') center/cover;
+            opacity: 0.5; mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+        }
+        .mockup-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid var(--primary); z-index: 2; background: #000;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        .mockup-name { font-family: 'Syncopate', sans-serif; font-size: 1.5rem; color: #fff; margin-top: 15px; z-index: 2; text-shadow: 0 0 10px var(--primary); }
+        .mockup-badge { background: var(--primary); color: #000; font-family: 'Fira Code', monospace; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; margin-top: 5px; font-weight: bold; z-index: 2; }
+        
+        .mockup-stats { width: 100%; padding: 20px; margin-top: auto; z-index: 2; display: flex; flex-direction: column; gap: 10px;}
+        .stat-row { display: flex; justify-content: space-between; font-family: 'Fira Code', monospace; font-size: 0.9rem; color: #fff; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;}
+        .stat-val { color: var(--primary); font-weight: bold; }
+
+        /* Bento Grid */
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
         .card {
             background: var(--card-bg); border: 1px solid var(--card-border); padding: 2rem; transition: 0.3s;
             clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px));
-            backdrop-filter: blur(10px);
-            transform-style: preserve-3d;
+            backdrop-filter: blur(10px); transform-style: preserve-3d;
         }
         .card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
         .card-large { grid-column: span 2; grid-row: span 2; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, rgba(0,240,255,0.05) 0%, transparent 100%); }
@@ -223,13 +261,31 @@
         .command-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; background: rgba(0,240,255,0.05); }
         .command-list { padding: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
         .cmd-item { border-left: 2px solid var(--primary); padding-left: 15px; }
+        
+        .cmd-code-container { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
         .cmd-item code { font-family: 'Fira Code', monospace; color: var(--primary); font-size: 1rem; background: rgba(0,240,255,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; }
+        .cmd-alias { font-family: 'Fira Code', monospace; font-size: 0.8rem; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; border: 1px dashed var(--card-border); }
+        
         .cmd-desc { display: block; color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
         
         .badge { font-family: 'Fira Code', monospace; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; }
         .badge.free { background: var(--primary); color: #000; }
         .badge.premium { background: var(--warning); color: #000; }
         .badge.dev { background: var(--danger); color: #fff; }
+        .badge.hf { background: var(--huggingface); color: #000; }
+
+        /* Limitations */
+        .limitations-box {
+            background: rgba(255, 0, 60, 0.05);
+            border: 1px solid rgba(255, 0, 60, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        .limitations-box h3 { color: var(--danger); font-family: 'Syncopate', sans-serif; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+        .limitations-box ul { list-style: none; }
+        .limitations-box li { color: var(--text-muted); margin-bottom: 10px; display: flex; gap: 10px; }
+        .limitations-box li i { color: var(--danger); margin-top: 5px; }
 
         /* Footer */
         footer { border-top: 1px solid var(--card-border); padding: 2rem; text-align: center; font-family: 'Fira Code', monospace; background: var(--nav-bg); }
@@ -246,9 +302,9 @@
             .nav-links { display: none; }
             .section-title { font-size: 1.8rem; }
             .status-badge { margin: 0 auto 1rem auto; }
+            .profile-section { text-align: center; }
         }
         
-        /* GSAP Reveal Classes */
         .gsap-reveal { opacity: 0; transform: translateY(50px); }
     </style>
 </head>
@@ -257,8 +313,8 @@
     <nav>
         <div class="logo"><i class="fa-solid fa-hexagon-nodes"></i> HEXA</div>
         <div class="nav-links">
+            <a href="#profile">[ Profile ]</a>
             <a href="#features">[ Features ]</a>
-            <a href="#interface">[ Interface ]</a>
             <a href="#commands">[ Commands ]</a>
         </div>
         <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
@@ -266,10 +322,10 @@
 
     <div class="ticker-wrap">
         <div class="ticker">
+            <span class="ticker-item"><i class="fa-solid fa-cloud-arrow-up"></i> [SYSTEM] Hugging Face Database Backup Successful</span>
             <span class="ticker-item"><i class="fa-solid fa-triangle-exclamation"></i> [BLOCKED] Phishing QR detected from IP 192.168.x.x</span>
             <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> [BLOCKED] Malicious hash #a4f9b... intercepted</span>
-            <span class="ticker-item"><i class="fa-solid fa-link-slash"></i> [BLOCKED] Scam domain (discord-nitro-gift.com) neutralized</span>
-            <span class="ticker-item"><i class="fa-solid fa-user-shield"></i> [SYSTEM] Global blocklist updated across 4,201 servers</span>
+            <span class="ticker-item"><i class="fa-solid fa-id-card"></i> [SYSTEM] Aesthetic Profile Card Generated for @user</span>
         </div>
     </div>
 
@@ -287,8 +343,8 @@
                     </a>
                 </div>
                 <div class="btn-container magnetic">
-                    <a href="#features" class="btn btn-outline">
-                        <i class="fa-solid fa-terminal"></i> Explore
+                    <a href="#profile" class="btn btn-outline">
+                        <i class="fa-solid fa-id-card"></i> View Profile
                     </a>
                 </div>
             </div>
@@ -300,6 +356,7 @@
 
     <main class="container">
         
+        <!-- INTERACTIVE TERMINAL -->
         <div class="terminal-window gsap-reveal">
             <div class="terminal-header">
                 <div class="terminal-dot dot-red"></div>
@@ -309,7 +366,7 @@
             </div>
             <div class="terminal-body" id="terminal-body" onclick="document.getElementById('terminal-input').focus()">
                 <div class="terminal-line">HEXA Core initialized.</div>
-                <div class="terminal-line">Connection to Discord Gateway: <span style="color:#27c93f">ESTABLISHED</span></div>
+                <div class="terminal-line">Hugging Face Sync: <span style="color:#27c93f">ONLINE</span></div>
                 <div class="terminal-line">Type <span style="color:#fff">;help</span> to view available commands.</div>
                 <br>
                 <div class="terminal-line terminal-input-line">
@@ -319,7 +376,33 @@
             </div>
         </div>
 
-        <section id="features" style="margin-top: 4rem;">
+        <!-- PROFILE CARD SECTION -->
+        <section id="profile" class="profile-section gsap-reveal">
+            <div class="profile-text">
+                <h2>Aesthetic Profiles</h2>
+                <p>HEXA now features a fully dynamic, image-based profile card generator. Use <code>;profile</code> to show off your stats, threat level, and Dev Friend badges with a beautiful, customized design.</p>
+                <p>Powered by custom font rendering and dynamic caching.</p>
+            </div>
+            <div class="profile-card-mockup">
+                <div class="mockup-card">
+                    <div class="mockup-banner-bg"></div>
+                    <!-- Replace src with your actual avatar path -->
+                    <img src="hexa-avatar.jpg" class="mockup-avatar" alt="Avatar">
+                    <div class="mockup-name">HEXA User</div>
+                    <div class="mockup-badge">DEV FRIEND</div>
+                    
+                    <div class="mockup-stats">
+                        <div class="stat-row"><span>Threat Level:</span> <span class="stat-val" style="color: var(--danger);">MAX</span></div>
+                        <div class="stat-row"><span>Server Rank:</span> <span class="stat-val">#1</span></div>
+                        <div class="stat-row"><span>Global Bans:</span> <span class="stat-val">14,203</span></div>
+                        <div class="stat-row"><span>Status:</span> <span class="stat-val" style="color: var(--success);">PROTECTED</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section id="features" style="margin-top: 6rem;">
             <h2 class="section-title gsap-reveal" data-scramble="System_Capabilities">System_Capabilities</h2>
             <div class="bento-grid">
                 <div class="card card-large tilt gsap-reveal">
@@ -327,7 +410,7 @@
                     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">The fundamental defense layer deployed on every server to stop malicious content at the hash level.</p>
                     <ul>
                         <li><i class="fa-solid fa-angle-right"></i> Perceptual Hashing (pHash/dHash) fingerprinting</li>
-                        <li><i class="fa-solid fa-angle-right"></i> Automated Image Deletion on match</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Automated Image Deletion & Punishments</li>
                         <li><i class="fa-solid fa-angle-right"></i> DM Notifications to compromised accounts</li>
                         <li><i class="fa-solid fa-angle-right"></i> Admin Security Logging</li>
                     </ul>
@@ -344,13 +427,23 @@
                     <h3 style="color: var(--danger);"><i class="fa-solid fa-code"></i> Root Access</h3>
                     <ul>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Global Blocklist</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> No-Prefix System</li>
                         <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Premium Management</li>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Global Ban/Unban</li>
+                    </ul>
+                </div>
+                <!-- New HF Feature Card -->
+                <div class="card tilt gsap-reveal" style="border-top: 3px solid var(--huggingface);">
+                    <h3 style="color: var(--huggingface);"><i class="fa-solid fa-cloud"></i> Cloud Sync</h3>
+                    <ul>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--huggingface);"></i> Auto-Database Backups</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--huggingface);"></i> Hugging Face Integration</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--huggingface);"></i> Zero Data Loss Guarantee</li>
                     </ul>
                 </div>
             </div>
         </section>
 
+        <!-- UI CAROUSEL -->
         <section id="interface" style="margin-top: 6rem;">
             <h2 class="section-title gsap-reveal" data-scramble="UI_Terminal">UI_Terminal</h2>
             <div class="carousel-track gsap-reveal">
@@ -359,56 +452,170 @@
             </div>
         </section>
 
+        <!-- COMMANDS -->
         <section id="commands" style="margin-top: 6rem;">
             <h2 class="section-title gsap-reveal" data-scramble="Command_Registry">Command_Registry</h2>
             
+            <!-- Core Commands -->
             <div class="command-category tilt gsap-reveal">
                 <div class="command-header">
                     <span><i class="fa-solid fa-user"></i> Public_Functions</span>
                     <span class="badge free">Free</span>
                 </div>
                 <div class="command-list">
-                    <div class="cmd-item"><code>;imgban [note]</code> <span class="cmd-desc">Reply to an image to add its hash to the blocklist.</span></div>
-                    <div class="cmd-item"><code>;imgunban <id></code> <span class="cmd-desc">Remove a blocked hash from the server.</span></div>
-                    <div class="cmd-item"><code>;imglist</code> <span class="cmd-desc">Browse the server's blocked hashes.</span></div>
-                    <div class="cmd-item"><code>;imgconfig</code> <span class="cmd-desc">View current server settings.</span></div>
-                    <div class="cmd-item"><code>;imgconfig punishment <delete|kick></code> <span class="cmd-desc">Set punishment action.</span></div>
-                    <div class="cmd-item"><code>;imgconfig logchannel <#channel></code> <span class="cmd-desc">Set the security log channel.</span></div>
-                    <div class="cmd-item"><code>;imgconfig threshold <0-16></code> <span class="cmd-desc">Set matching strictness (Default: 5).</span></div>
-                    <div class="cmd-item"><code>;imgconfig dm <on|off></code> <span class="cmd-desc">Toggle DM warnings.</span></div>
+                    <div class="cmd-item">
+                        <div class="cmd-code-container">
+                            <code>;imgban [note]</code> <span class="cmd-alias">;ib</span>
+                        </div>
+                        <span class="cmd-desc">Reply to an image to add its hash to the blocklist.</span>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-code-container">
+                            <code>;imgunban <id></code> <span class="cmd-alias">;iub</span>
+                        </div>
+                        <span class="cmd-desc">Remove a blocked hash from the server.</span>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-code-container">
+                            <code>;imglist</code> <span class="cmd-alias">;il</span>
+                        </div>
+                        <span class="cmd-desc">Browse the server's blocked hashes.</span>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-code-container">
+                            <code>;imgconfig</code> <span class="cmd-alias">;ic</span>
+                        </div>
+                        <span class="cmd-desc">View current server settings.</span>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-code-container">
+                            <code>;imgconfig punishment <delete|kick></code> <span class="cmd-alias">;ic punish</span>
+                        </div>
+                        <span class="cmd-desc">Set punishment action.</span>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-code-container">
+                            <code>;imgconfig logchannel <#channel></code> <span class="cmd-alias">;ic log</span>
+                        </div>
+                        <span class="cmd-desc">Set the security log channel.</span>
+                    </div>
+                    <div class="cmd-item">
+                        <code>;imgconfig threshold <0-16></code> 
+                        <span class="cmd-desc">Set matching strictness (Default: 5).</span>
+                    </div>
+                    <div class="cmd-item">
+                        <code>;imgconfig dm <on|off></code> 
+                        <span class="cmd-desc">Toggle DM warnings.</span>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-code-container">
+                            <code>;profile [@user]</code> <span class="cmd-alias">;p</span>
+                        </div>
+                        <span class="cmd-desc">Generate an aesthetic profile card.</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Premium Commands -->
             <div class="command-category tilt gsap-reveal" style="border-color: rgba(252, 238, 10, 0.3);">
                 <div class="command-header" style="background: rgba(252, 238, 10, 0.05); border-bottom-color: rgba(252, 238, 10, 0.3);">
                     <span><i class="fa-solid fa-crown"></i> Premium_Functions</span>
                     <span class="badge premium">Premium</span>
                 </div>
                 <div class="command-list">
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig punishment <timeout|softban|ban></code> <span class="cmd-desc">Unlocks higher-tier punishments.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrban <payload></code> <span class="cmd-desc">Block a QR code by its payload.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrunban <id></code> <span class="cmd-desc">Remove a blocked QR payload.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrlist</code> <span class="cmd-desc">Browse blocked QR payloads.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig qr <on|off></code> <span class="cmd-desc">Toggle QR scanning.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainban <domain></code> <span class="cmd-desc">Block a URL domain.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainunban <id></code> <span class="cmd-desc">Unblock a domain.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainlist</code> <span class="cmd-desc">Browse blocked domains.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--warning);"><code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig links <on|off></code> <span class="cmd-desc">Toggle link scanning.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig punishment <timeout|softban|ban></code> 
+                        <span class="cmd-desc">Unlocks higher-tier punishments.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig links <on|off></code> 
+                        <span class="cmd-desc">Toggle link scanning.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainban <domain></code> 
+                        <span class="cmd-desc">Block a URL domain.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainunban <id></code> 
+                        <span class="cmd-desc">Unblock a domain.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;domainlist</code> 
+                        <span class="cmd-desc">Browse blocked domains.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;imgconfig qr <on|off></code> 
+                        <span class="cmd-desc">Toggle QR scanning.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <div class="cmd-code-container">
+                            <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrban <payload></code> <span class="cmd-alias" style="color: var(--warning);">;imgbanqr</span>
+                        </div>
+                        <span class="cmd-desc">Block a QR code by its payload.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrunban <id></code> 
+                        <span class="cmd-desc">Remove a blocked QR payload.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--warning);">
+                        <code style="color: var(--warning); background: rgba(252,238,10,0.1);">;qrlist</code> 
+                        <span class="cmd-desc">Browse blocked QR payloads.</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Dev Commands -->
             <div class="command-category tilt gsap-reveal" style="border-color: rgba(255, 0, 60, 0.3);">
                 <div class="command-header" style="background: rgba(255, 0, 60, 0.05); border-bottom-color: rgba(255, 0, 60, 0.3);">
                     <span><i class="fa-solid fa-terminal"></i> Root_Functions</span>
                     <span class="badge dev">Dev</span>
                 </div>
                 <div class="command-list">
-                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globalban [note]</code> <span class="cmd-desc">Block image across all servers.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globalunban <id></code> <span class="cmd-desc">Remove hash from global blocklist.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globallist</code> <span class="cmd-desc">View the global blocklist.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;premium add <guild_id> [days]</code> <span class="cmd-desc">Grant premium access.</span></div>
-                    <div class="cmd-item" style="border-left-color: var(--danger);"><code style="color: var(--danger); background: rgba(255,0,60,0.1);">;premium remove <guild_id></code> <span class="cmd-desc">Revoke premium access.</span></div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);">
+                        <div class="cmd-code-container">
+                            <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globalban [note]</code> <span class="cmd-alias" style="color: var(--danger);">;gban</span>
+                        </div>
+                        <span class="cmd-desc">Block image across all servers.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);">
+                        <div class="cmd-code-container">
+                            <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;globalunban <id></code> <span class="cmd-alias" style="color: var(--danger);">;gunban</span>
+                        </div>
+                        <span class="cmd-desc">Remove hash from global blocklist.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);">
+                        <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;devfq add <user></code> 
+                        <span class="cmd-desc">Add user to Dev Friends list.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);">
+                        <div class="cmd-code-container">
+                            <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;noprefix add <user></code> <span class="cmd-alias" style="color: var(--danger);">;np</span>
+                        </div>
+                        <span class="cmd-desc">Grant user no-prefix access.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);">
+                        <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;premium add <guild_id> [days]</code> 
+                        <span class="cmd-desc">Grant premium access.</span>
+                    </div>
+                    <div class="cmd-item" style="border-left-color: var(--danger);">
+                        <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;hf pull</code> / <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;hf push</code> 
+                        <span class="cmd-desc">Force database download/upload to Hugging Face.</span>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- LIMITATIONS -->
+        <section id="limitations" class="gsap-reveal">
+            <div class="limitations-box">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> System Limitations</h3>
+                <ul>
+                    <li><i class="fa-solid fa-angle-right"></i> <strong>Bot/Webhook Exemption:</strong> Messages sent by bots/webhooks are not scanned.</li>
+                    <li><i class="fa-solid fa-angle-right"></i> <strong>Edits:</strong> Edited messages are scanned, but deleted messages cannot be recovered.</li>
+                    <li><i class="fa-solid fa-angle-right"></i> <strong>SSRF Protection:</strong> Linked images are only downloaded if the URL resolves to a safe, public IP.</li>
+                    <li><i class="fa-solid fa-angle-right"></i> <strong>Emoji Rendering:</strong> Custom emojis won't render for users who don't share a server with them.</li>
+                    <li><i class="fa-solid fa-angle-right"></i> <strong>Profile Cards:</strong> Unsupported font characters fallback to "Hexa User". Emojis in names require <code>pilmoji</code>.</li>
+                </ul>
             </div>
         </section>
     </main>
@@ -420,7 +627,7 @@
         </a>
     </footer>
 
-    <!-- EXTERNAL LIBRARIES FOR ULTIMATE ANIMATIONS -->
+    <!-- EXTERNAL LIBRARIES -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
@@ -431,13 +638,10 @@
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
             smooth: true,
             mouseMultiplier: 1,
             smoothTouch: false,
             touchMultiplier: 2,
-            infinite: false,
         });
 
         function raf(time) {
@@ -446,16 +650,13 @@
         }
         requestAnimationFrame(raf);
 
-        // --- 2. GSAP SCROLL REVEAL ANIMATIONS ---
+        // --- 2. GSAP SCROLL REVEAL ---
         gsap.registerPlugin(ScrollTrigger);
-
-        // Sync Lenis with ScrollTrigger
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
         gsap.ticker.lagSmoothing(0);
 
         const revealElements = document.querySelectorAll('.gsap-reveal');
-        
         revealElements.forEach((el) => {
             gsap.to(el, {
                 scrollTrigger: {
@@ -470,47 +671,28 @@
             });
         });
 
-        // --- 3. MAGNETIC BUTTONS (GSAP) ---
+        // --- 3. MAGNETIC BUTTONS ---
         const magneticElements = document.querySelectorAll('.magnetic');
-
         magneticElements.forEach((el) => {
             const btn = el.querySelector('.btn');
-            
             el.addEventListener('mousemove', (e) => {
                 const rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                
-                gsap.to(btn, {
-                    x: x * 0.3,
-                    y: y * 0.3,
-                    duration: 0.5,
-                    ease: "power2.out"
-                });
+                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.5, ease: "power2.out" });
             });
-
             el.addEventListener('mouseleave', () => {
-                gsap.to(btn, {
-                    x: 0,
-                    y: 0,
-                    duration: 0.5,
-                    ease: "elastic.out(1, 0.3)"
-                });
+                gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
             });
         });
 
-        // --- 4. 3D TILT CARDS (VANILLA TILT) ---
+        // --- 4. 3D TILT CARDS ---
         VanillaTilt.init(document.querySelectorAll(".tilt"), {
-            max: 10,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.2,
-            scale: 1.02
+            max: 10, speed: 400, glare: true, "max-glare": 0.2, scale: 1.02
         });
 
         // --- 5. MATRIX TEXT SCRAMBLE ---
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}:<>?";
-        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -521,17 +703,11 @@
                     const interval = setInterval(() => {
                         el.innerText = el.innerText.split("")
                             .map((letter, index) => {
-                                if(index < iterations) {
-                                    return originalText[index];
-                                }
+                                if(index < iterations) return originalText[index];
                                 return letters[Math.floor(Math.random() * letters.length)]
-                            })
-                            .join("");
+                            }).join("");
                         
-                        if (iterations >= originalText.length) {
-                            clearInterval(interval);
-                        }
-                        
+                        if (iterations >= originalText.length) clearInterval(interval);
                         iterations += 1 / 3;
                     }, 30);
                     
@@ -539,18 +715,18 @@
                 }
             });
         }, { threshold: 0.5 });
-
         document.querySelectorAll('.section-title').forEach(el => observer.observe(el));
 
-        // --- INTERACTIVE TERMINAL SCRIPT ---
+        // --- INTERACTIVE TERMINAL ---
         const terminalBody = document.getElementById('terminal-body');
         const terminalInput = document.getElementById('terminal-input');
         
         const responses = {
-            ';help': 'Available commands:<br>;imgban - Block an image<br>;imgconfig - Configure settings<br>;status - Check system status<br>;clear - Clear terminal',
-            ';status': 'System Status: <span style="color:#27c93f">ONLINE</span><br>Uptime: [Fetching...]<br>Global Hashes: [Fetching...]<br>Ping: [Calculating...]',
+            ';help': 'Available commands:<br>;imgban - Block an image<br>;profile - View aesthetic card<br>;status - Check system<br>;clear - Clear terminal',
+            ';status': 'System Status: <span style="color:#27c93f">ONLINE</span><br>HF Cloud Sync: <span style="color:#ffd21e">ACTIVE</span><br>Global Hashes: [Fetching...]<br>Ping: [Calculating...]',
             ';imgban': 'Error: You must reply to an image with this command.',
-            ';imgconfig': 'Opening configuration panel...<br>Threshold: 5<br>Punishment: kick<br>DM Warnings: ON',
+            ';profile': 'Generating aesthetic card...<br>User: HEXA User<br>Threat Level: MAX<br>[Card rendered successfully]',
+            ';hf push': 'Uploading database to Hugging Face...<br><span style="color:#27c93f">[SUCCESS] Database synced.</span>',
             ';clear': 'CLEAR'
         };
 
@@ -558,7 +734,6 @@
             if (e.key === 'Enter') {
                 const command = this.value.toLowerCase().trim();
                 this.value = '';
-                
                 addLine(`root@hexa:~# ${command}`, '#fff');
                 
                 setTimeout(() => {
@@ -568,7 +743,7 @@
                     } else if (responses[command]) {
                         addLine(responses[command], 'var(--terminal-text)');
                     } else if (command !== '') {
-                        addLine(`Command not found: ${command}. Type ;help for a list of commands.`, '#ff5f56');
+                        addLine(`Command not found. Type ;help for list.`, '#ff5f56');
                     }
                 }, 200);
             }
@@ -586,10 +761,7 @@
         function addInputLine() {
             const inputLine = document.createElement('div');
             inputLine.className = 'terminal-line terminal-input-line';
-            inputLine.innerHTML = `
-                <span class="terminal-prompt">root@hexa:~#</span>
-                <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" autofocus>
-            `;
+            inputLine.innerHTML = `<span class="terminal-prompt">root@hexa:~#</span><input type="text" id="terminal-input" class="terminal-input" autocomplete="off" autofocus>`;
             terminalBody.appendChild(inputLine);
             document.getElementById('terminal-input').focus();
         }
