@@ -19,7 +19,7 @@
             --danger: #ff003c;
             --warning: #fcee0a;
             --success: #27c93f;
-            --huggingface: #ffd21e;
+            --purple: #a855f7;
             
             --card-bg: rgba(10, 15, 25, 0.8);
             --card-border: rgba(0, 240, 255, 0.2);
@@ -37,6 +37,7 @@
             --danger: #d90036;
             --warning: #d4a000;
             --success: #1a8a2a;
+            --purple: #7e22ce;
             
             --card-bg: rgba(255, 255, 255, 0.9);
             --card-border: rgba(0, 119, 255, 0.2);
@@ -272,20 +273,6 @@
         .badge.free { background: var(--primary); color: #000; }
         .badge.premium { background: var(--warning); color: #000; }
         .badge.dev { background: var(--danger); color: #fff; }
-        .badge.hf { background: var(--huggingface); color: #000; }
-
-        /* Limitations */
-        .limitations-box {
-            background: rgba(255, 0, 60, 0.05);
-            border: 1px solid rgba(255, 0, 60, 0.3);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-        .limitations-box h3 { color: var(--danger); font-family: 'Syncopate', sans-serif; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
-        .limitations-box ul { list-style: none; }
-        .limitations-box li { color: var(--text-muted); margin-bottom: 10px; display: flex; gap: 10px; }
-        .limitations-box li i { color: var(--danger); margin-top: 5px; }
 
         /* Footer */
         footer { border-top: 1px solid var(--card-border); padding: 2rem; text-align: center; font-family: 'Fira Code', monospace; background: var(--nav-bg); }
@@ -322,7 +309,7 @@
 
     <div class="ticker-wrap">
         <div class="ticker">
-            <span class="ticker-item"><i class="fa-solid fa-cloud-arrow-up"></i> [SYSTEM] Hugging Face Database Backup Successful</span>
+            <span class="ticker-item"><i class="fa-solid fa-database"></i> [SYSTEM] Database Auto-Backup Successful</span>
             <span class="ticker-item"><i class="fa-solid fa-triangle-exclamation"></i> [BLOCKED] Phishing QR detected from IP 192.168.x.x</span>
             <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> [BLOCKED] Malicious hash #a4f9b... intercepted</span>
             <span class="ticker-item"><i class="fa-solid fa-id-card"></i> [SYSTEM] Aesthetic Profile Card Generated for @user</span>
@@ -366,7 +353,7 @@
             </div>
             <div class="terminal-body" id="terminal-body" onclick="document.getElementById('terminal-input').focus()">
                 <div class="terminal-line">HEXA Core initialized.</div>
-                <div class="terminal-line">Hugging Face Sync: <span style="color:#27c93f">ONLINE</span></div>
+                <div class="terminal-line">Database Sync: <span style="color:#27c93f">ONLINE</span></div>
                 <div class="terminal-line">Type <span style="color:#fff">;help</span> to view available commands.</div>
                 <br>
                 <div class="terminal-line terminal-input-line">
@@ -386,7 +373,6 @@
             <div class="profile-card-mockup">
                 <div class="mockup-card">
                     <div class="mockup-banner-bg"></div>
-                    <!-- Replace src with your actual avatar path -->
                     <img src="hexa-avatar.jpg" class="mockup-avatar" alt="Avatar">
                     <div class="mockup-name">HEXA User</div>
                     <div class="mockup-badge">DEV FRIEND</div>
@@ -431,13 +417,13 @@
                         <li><i class="fa-solid fa-angle-right" style="color: var(--danger);"></i> Premium Management</li>
                     </ul>
                 </div>
-                <!-- New HF Feature Card -->
-                <div class="card tilt gsap-reveal" style="border-top: 3px solid var(--huggingface);">
-                    <h3 style="color: var(--huggingface);"><i class="fa-solid fa-cloud"></i> Cloud Sync</h3>
+                <!-- Updated Backup Card -->
+                <div class="card tilt gsap-reveal" style="border-top: 3px solid var(--purple);">
+                    <h3 style="color: var(--purple);"><i class="fa-solid fa-database"></i> Auto-Backups</h3>
                     <ul>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--huggingface);"></i> Auto-Database Backups</li>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--huggingface);"></i> Hugging Face Integration</li>
-                        <li><i class="fa-solid fa-angle-right" style="color: var(--huggingface);"></i> Zero Data Loss Guarantee</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--purple);"></i> Automatic Database Backups</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--purple);"></i> Cloud Storage Integration</li>
+                        <li><i class="fa-solid fa-angle-right" style="color: var(--purple);"></i> Zero Data Loss Guarantee</li>
                     </ul>
                 </div>
             </div>
@@ -597,25 +583,7 @@
                         <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;premium add <guild_id> [days]</code> 
                         <span class="cmd-desc">Grant premium access.</span>
                     </div>
-                    <div class="cmd-item" style="border-left-color: var(--danger);">
-                        <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;hf pull</code> / <code style="color: var(--danger); background: rgba(255,0,60,0.1);">;hf push</code> 
-                        <span class="cmd-desc">Force database download/upload to Hugging Face.</span>
-                    </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- LIMITATIONS -->
-        <section id="limitations" class="gsap-reveal">
-            <div class="limitations-box">
-                <h3><i class="fa-solid fa-triangle-exclamation"></i> System Limitations</h3>
-                <ul>
-                    <li><i class="fa-solid fa-angle-right"></i> <strong>Bot/Webhook Exemption:</strong> Messages sent by bots/webhooks are not scanned.</li>
-                    <li><i class="fa-solid fa-angle-right"></i> <strong>Edits:</strong> Edited messages are scanned, but deleted messages cannot be recovered.</li>
-                    <li><i class="fa-solid fa-angle-right"></i> <strong>SSRF Protection:</strong> Linked images are only downloaded if the URL resolves to a safe, public IP.</li>
-                    <li><i class="fa-solid fa-angle-right"></i> <strong>Emoji Rendering:</strong> Custom emojis won't render for users who don't share a server with them.</li>
-                    <li><i class="fa-solid fa-angle-right"></i> <strong>Profile Cards:</strong> Unsupported font characters fallback to "Hexa User". Emojis in names require <code>pilmoji</code>.</li>
-                </ul>
             </div>
         </section>
     </main>
@@ -723,10 +691,9 @@
         
         const responses = {
             ';help': 'Available commands:<br>;imgban - Block an image<br>;profile - View aesthetic card<br>;status - Check system<br>;clear - Clear terminal',
-            ';status': 'System Status: <span style="color:#27c93f">ONLINE</span><br>HF Cloud Sync: <span style="color:#ffd21e">ACTIVE</span><br>Global Hashes: [Fetching...]<br>Ping: [Calculating...]',
+            ';status': 'System Status: <span style="color:#27c93f">ONLINE</span><br>Database Sync: <span style="color:#27c93f">ACTIVE</span><br>Global Hashes: [Fetching...]<br>Ping: [Calculating...]',
             ';imgban': 'Error: You must reply to an image with this command.',
             ';profile': 'Generating aesthetic card...<br>User: HEXA User<br>Threat Level: MAX<br>[Card rendered successfully]',
-            ';hf push': 'Uploading database to Hugging Face...<br><span style="color:#27c93f">[SUCCESS] Database synced.</span>',
             ';clear': 'CLEAR'
         };
 
